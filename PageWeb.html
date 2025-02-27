@@ -1,16 +1,114 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Données du compas</title>
-    </head>
-    <body>
-        <h1>Gîte :</h1><br>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compas NKE 9X</title>
+</head>
+<body>
+    <h1>Paramétrage du Compas NKE 9X</h1>
 
-        <h1>Cap magnétique :</h1><br>
+    <h2>Données du Compas</h2>
+    <form id="compas-form">
+        <label for="heading">Cap :</label>
+        <input type="number" id="heading" name="heading" required><br>
 
-        <h1>Tanguage :</h1><br>
+        <label for="pitch">Tangage :</label>
+        <input type="number" id="pitch" name="pitch" required><br>
 
-        <h1>Module magnétique :</h1><br>
-        
-    </body>
+        <label for="roll">Roulis :</label>
+        <input type="number" id="roll" name="roll" required><br>
+
+        <button type="button" onclick="afficherCompas()">Afficher</button>
+    </form>
+
+    <div id="compas-output"></div>
+
+    <h2>Liaison Série</h2>
+    <form id="serie-form">
+        <label for="baudrate">Vitesse de transmission :</label>
+        <input type="number" id="baudrate" name="baudrate" required><br>
+
+        <button type="button" onclick="afficherSerie()">Afficher</button>
+    </form>
+
+    <div id="serie-output"></div>
+
+    <h2>Type de Trame NMEA 0183 à Logger</h2>
+    <form id="nmea-form">
+        <label for="nmea-type">Type de trame NMEA 0183:</label>
+        <input type="text" id="nmea-type" name="nmea-type" required><br>
+
+        <button type="button" onclick="afficherNmea()">Afficher</button>
+    </form>
+
+    <div id="nmea-output"></div>
+
+    <h2>Paramètres de la Liaison Wifi</h2>
+    <form id="wifi-form">
+        <label for="ssid">SSID:</label>
+        <input type="text" id="ssid" name="ssid" required><br>
+
+        <label for="password">Mot de passe:</label>
+        <input type="password" id="password" name="password" required><br>
+
+        <label for="security">Type de sécurité:</label>
+        <input type="text" id="security" name="security" required><br>
+
+        <button type="button" onclick="afficherWifi()">Afficher</button>
+    </form>
+
+    <div id="wifi-output"></div>
+
+    <script>
+        function recevoirDonneesCompas() {
+            return {
+                heading: Math.floor(Math.random() * 360),
+                pitch: (Math.random() * 20 - 10).toFixed(2),
+                roll: (Math.random() * 20 - 10).toFixed(2)
+            };
+        }
+
+        function afficherCompas() {
+            var donneesCompas = recevoirDonneesCompas();
+            document.getElementById('heading').value = donneesCompas.heading;
+            document.getElementById('pitch').value = donneesCompas.pitch;
+            document.getElementById('roll').value = donneesCompas.roll;
+
+            document.getElementById('compas-output').innerHTML = 
+                '<h3>Données du Compas</h3>' +
+                '<p>Cap: ' + donneesCompas.heading + '°</p>' +
+                '<p>Tangage: ' + donneesCompas.pitch + '°</p>' +
+                '<p>Roulis: ' + donneesCompas.roll + '°</p>';
+        }
+
+        function afficherSerie() {
+            var baudrate = document.getElementById('baudrate').value;
+
+            document.getElementById('serie-output').innerHTML = 
+                '<h3>Liaison Série</h3>' +
+                '<p>Vitesse de transmission: ' + baudrate + ' baud</p>';
+        }
+
+        function afficherNmea() {
+            var nmeaType = document.getElementById('nmea-type').value;
+
+            document.getElementById('nmea-output').innerHTML = 
+                '<h3>Type de Trame NMEA 0183</h3>' +
+                '<p>Type de trame: ' + nmeaType + '</p>';
+        }
+
+        function afficherWifi() {
+            var ssid = document.getElementById('ssid').value;
+            var password = document.getElementById('password').value;
+            var security = document.getElementById('security').value;
+
+            document.getElementById('wifi-output').innerHTML = 
+                '<h3>Paramètres de la Liaison Wifi</h3>' +
+                '<p>SSID: ' + ssid + '</p>' +
+                '<p>Mot de passe: ' + password + '</p>' +
+                '<p>Type de sécurité: ' + security + '</p>';
+        }
+    </script>
+</body>
 </html>
