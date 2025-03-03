@@ -4,6 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Configuration du Seuil de Hauteur d'Eau</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        section {
+            margin-bottom: 20px;
+        }
+        label, input, button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -35,73 +62,73 @@
         </section>
     </div>
     <script>
-// Fonction pour enregistrer le seuil de hauteur d'eau
-function saveThreshold() {
-    const threshold = document.getElementById('threshold').value;
-    if (threshold) {
-        localStorage.setItem('waterThreshold', threshold);
-        alert('Seuil de hauteur d\'eau enregistré avec succès !');
-    } else {
-        alert('Veuillez entrer une valeur de seuil valide.');
-    }
-}
+        // Fonction pour enregistrer le seuil de hauteur d'eau
+        function saveThreshold() {
+            const threshold = document.getElementById('threshold').value;
+            if (threshold) {
+                localStorage.setItem('waterThreshold', threshold);
+                alert('Seuil de hauteur d\'eau enregistré avec succès !');
+            } else {
+                alert('Veuillez entrer une valeur de seuil valide.');
+            }
+        }
 
-// Fonction pour charger le seuil de hauteur d'eau enregistré
-function loadThreshold() {
-    const threshold = localStorage.getItem('waterThreshold');
-    if (threshold) {
-        document.getElementById('threshold').value = threshold;
-    }
-}
+        // Fonction pour charger le seuil de hauteur d'eau enregistré
+        function loadThreshold() {
+            const threshold = localStorage.getItem('waterThreshold');
+            if (threshold) {
+                document.getElementById('threshold').value = threshold;
+            }
+        }
 
-// Fonction pour enregistrer la configuration NMEA
-function saveNmeaConfig() {
-    const nmeaType = document.getElementById('nmea-type').value;
-    if (nmeaType) {
-        localStorage.setItem('nmeaType', nmeaType);
-        alert('Configuration NMEA enregistrée avec succès !');
-    } else {
-        alert('Veuillez entrer un type de trame NMEA valide.');
-    }
-}
+        // Fonction pour enregistrer la configuration NMEA
+        function saveNmeaConfig() {
+            const nmeaType = document.getElementById('nmea-type').value;
+            if (nmeaType) {
+                localStorage.setItem('nmeaType', nmeaType);
+                alert('Configuration NMEA enregistrée avec succès !');
+            } else {
+                alert('Veuillez entrer un type de trame NMEA valide.');
+            }
+        }
 
-// Fonction pour charger la configuration NMEA enregistrée
-function loadNmeaConfig() {
-    const nmeaType = localStorage.getItem('nmeaType');
-    if (nmeaType) {
-        document.getElementById('nmea-type').value = nmeaType;
-    }
-}
+        // Fonction pour charger la configuration NMEA enregistrée
+        function loadNmeaConfig() {
+            const nmeaType = localStorage.getItem('nmeaType');
+            if (nmeaType) {
+                document.getElementById('nmea-type').value = nmeaType;
+            }
+        }
 
-// Fonction pour enregistrer la configuration WiFi
-function saveWifiConfig() {
-    const ssid = document.getElementById('ssid').value;
-    const password = document.getElementById('password').value;
-    const security = document.getElementById('security').value;
-    if (ssid && password && security) {
-        localStorage.setItem('wifiConfig', JSON.stringify({ ssid, password, security }));
-        alert('Configuration WiFi enregistrée avec succès !');
-    } else {
-        alert('Veuillez remplir tous les champs de configuration WiFi.');
-    }
-}
+        // Fonction pour enregistrer la configuration WiFi
+        function saveWifiConfig() {
+            const ssid = document.getElementById('ssid').value;
+            const password = document.getElementById('password').value;
+            const security = document.getElementById('security').value;
+            if (ssid && password && security) {
+                localStorage.setItem('wifiConfig', JSON.stringify({ ssid, password, security }));
+                alert('Configuration WiFi enregistrée avec succès !');
+            } else {
+                alert('Veuillez remplir tous les champs de configuration WiFi.');
+            }
+        }
 
-// Fonction pour charger la configuration WiFi enregistrée
-function loadWifiConfig() {
-    const wifiConfig = JSON.parse(localStorage.getItem('wifiConfig'));
-    if (wifiConfig) {
-        document.getElementById('ssid').value = wifiConfig.ssid;
-        document.getElementById('password').value = wifiConfig.password;
-        document.getElementById('security').value = wifiConfig.security;
-    }
-}
+        // Fonction pour charger la configuration WiFi enregistrée
+        function loadWifiConfig() {
+            const wifiConfig = JSON.parse(localStorage.getItem('wifiConfig'));
+            if (wifiConfig) {
+                document.getElementById('ssid').value = wifiConfig.ssid;
+                document.getElementById('password').value = wifiConfig.password;
+                document.getElementById('security').value = wifiConfig.security;
+            }
+        }
 
-// Charger les configurations au chargement de la page
-window.onload = function() {
-    loadThreshold();
-    loadNmeaConfig();
-    loadWifiConfig();
-}
+        // Charger les configurations au chargement de la page
+        window.onload = function() {
+            loadThreshold();
+            loadNmeaConfig();
+            loadWifiConfig();
+        }
     </script>
 </body>
 </html>
