@@ -61,25 +61,55 @@
     <div id="wifi-output"></div>
 
     <script>
-        function recevoirDonneesCompas() {
-            return {
-                heading: Math.floor(Math.random() * 360),
-                pitch: (Math.random() * 20 - 10).toFixed(2),
-                roll: (Math.random() * 20 - 10).toFixed(2)
-            };
+        let port;
+        let reader;
+
+        async function connecterCompas() {
+            try {
+                port = await navigator.serial.requestPort();
+                await port.open({ baudRate: 9600 });
+                reader = port.readable.getReader();
+                lireTramesCompas();
+            } catch (e) {
+                console.error('Erreur de connexion au port série', e);
+            }
+        }
+
+        async function lireTramesCompas() {
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) {
+                    console.log('Lecture terminée');
+                    reader.releaseLock();
+                    break;
+                }
+                const trame = new TextDecoder().decode(value);
+                traiterTramesCompas(trame);
+            }
+        }
+
+        function traiterTramesCompas(trame) {
+            if (trame.startsWith('$HEHDT')) {
+                const parts = trame.split(',');
+                const heading = parseFloat(parts[1]);
+                document.getElementById('heading').value = heading;
+                document.getElementById('compas-output').innerHTML = '<h3>Données du Compas</h3>' +
+                    '<p>Cap: ' + heading + '°</p>';
+            } else if (trame.startsWith('$HEHRT')) {
+                const parts = trame.split(',');
+                const pitch = parseFloat(parts[1]);
+                const roll = parseFloat(parts[2]);
+                document.getElementById('pitch').value = pitch;
+                document.getElementById('roll').value = roll;
+                document.getElementById('compas-output').innerHTML += '<p>Tangage: ' + pitch + '°</p>' +
+                    '<p>Roulis: ' + roll + '°</p>';
+            }
         }
 
         function afficherCompas() {
-            var donneesCompas = recevoirDonneesCompas();
-            document.getElementById('heading').value = donneesCompas.heading;
-            document.getElementById('pitch').value = donneesCompas.pitch;
-            document.getElementById('roll').value = donneesCompas.roll;
-
-            document.getElementById('compas-output').innerHTML = 
-                '<h3>Données du Compas</h3>' +
-                '<p>Cap: ' + donneesCompas.heading + '°</p>' +
-                '<p>Tangage: ' + donneesCompas.pitch + '°</p>' +
-                '<p>Roulis: ' + donneesCompas.roll + '°</p>';
+            if (!port) {
+                connecterCompas();
+            }
         }
 
         function afficherSerie() {
