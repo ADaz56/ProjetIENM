@@ -1,0 +1,281 @@
+<!doctype html>
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>GuardXP Interface - Status</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="spectre.min.css" />
+    <link rel="stylesheet" href="nke.css" />
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+    <script type="text/javascript">
+        mmsi_number = 0;
+        var plat = 0; var plon = 0; var llat = 0; var llon = 0; var alat = 0; var alon = 0; var ptotsat = 0; var ltotsat = 0; var atotsat = 0; const pid = []; const psnr = []; const lid = []; const lsnr = []; var aid = []; var bars;
+        function srce(where, what) { document.getElementById(where).src = what; }
+        var leds = '<svg viewBox="0 0 50 50" width="30" Style="padding-top:10px;" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="a" x1=".57766" x2=".56702" y1="1.146" y2=".15418"><stop stop-color="#f0f0f0" stop-opacity="0" offset="0"/><stop stop-color="#f0f0f0" stop-opacity=".6" offset="1"/></linearGradient><linearGradient id="b" x1=".53334" x2=".60953" y1=".057144" y2=".84763"><stop stop-color="#828282" offset="0"/><stop stop-color="#929292" stop-opacity=".35294" offset="1"/></linearGradient><linearGradient id="c" x1=".49569" x2=".5" y1=".018268" y2="1"><stop stop-color="#adadad" offset="0"/><stop stop-color="#f0f0f0" offset="1"/></linearGradient></defs><g transform="matrix(31.25,0,0,31.25,-700,-1400)" stroke-linecap="round" stroke-linejoin="round" stroke-width=".8"><path d="m24 45.6c0 0.4416-0.3584 0.8-0.8 0.8-0.4416 0-0.8-0.3584-0.8-0.8s0.3584-0.8 0.8-0.8c0.4416 0 0.8 0.3584 0.8 0.8z" fill="url(#c)"/><path d="m23.846 45.6c0 0.35638-0.28924 0.64562-0.64562 0.64562-0.35638 0-0.64562-0.28924-0.64562-0.64562 0-0.35637 0.28924-0.64561 0.64562-0.64561 0.35638 0 0.64562 0.28923 0.64562 0.64561z" fill="url(#b)"/><path id="c';
+        var lede = '" d="m23.778 45.6c0 0.31905-0.25894 0.57799-0.57798 0.57799-0.31905 0-0.57799-0.25894-0.57799-0.57799 0-0.31904 0.25894-0.57797 0.57799-0.57797 0.31905 0 0.57798 0.25894 0.57798 0.57797z" fill="#3f3f3f"/><path d="m23.66 45.407c0 0.19686-0.2066 0.35663-0.46116 0.35663-0.25456 0-0.46116-0.15977-0.46116-0.35663 0-0.19685 0.2066-0.35662 0.46116-0.35662 0.25456 0 0.46116 0.15977 0.46116 0.35662z" fill="url(#a)"/></g></svg>';
+
+        function createVerGauge(id) {
+            document.getElementById('led1').innerHTML = leds + '1' + lede;
+            document.getElementById('led2').innerHTML = leds + '2' + lede;
+            document.getElementById('led3').innerHTML = leds + '3' + lede;
+            document.getElementById('led4').innerHTML = leds + '4' + lede;
+            if (mmsi_number > 0) srce('ok1', 'tick.svg');
+            var rc1 = '<rect id="';
+            var rct = ' width="10" height="60""></rect>';
+            var rc2 = ' fill="#212121"';
+            var rc3 = ' fill="#404040"></text>';
+            var rc4 = '<text class="sm" id="';
+            var tmpl = '<svg viewBox="0 0 188 76"><style>.sm { font: 4px arial; }</style>' +
+                rc1 + id + '_base1" x="5" y="0"' + rct +
+                rc1 + id + '_base2" x="15" y="0"' + rct +
+                rc1 + id + '_base3" x="25" y="0"' + rct +
+                rc1 + id + '_base4" x="35" y="0"' + rct +
+                rc1 + id + '_base5" x="45" y="0"' + rct +
+                rc1 + id + '_base6" x="55" y="0"' + rct +
+                rc1 + id + '_base7" x="65" y="0"' + rct +
+                rc1 + id + '_base8" x="75" y="0"' + rct +
+                rc1 + id + '_base9" x="85" y="0"' + rct +
+                rc1 + id + '_base10" x="95" y="0"' + rct +
+                rc1 + id + '_base11" x="105" y="0"' + rct +
+                rc1 + id + '_base12" x="115" y="0"' + rct +
+                rc1 + id + '_base13" x="125" y="0"' + rct +
+                rc1 + id + '_base14" x="135" y="0"' + rct +
+                rc1 + id + '_base15" x="145" y="0"' + rct +
+                rc1 + id + '_base16" x="155" y="0"' + rct +
+                rc1 + id + '_pr1" x="5" y="0"' + rc2 + rct +
+                rc1 + id + '_pr2" x="15" y="0"' + rc2 + rct +
+                rc1 + id + '_pr3" x="25" y="0"' + rc2 + rct +
+                rc1 + id + '_pr4" x="35" y="0"' + rc2 + rct +
+                rc1 + id + '_pr5" x="45" y="0"' + rc2 + rct +
+                rc1 + id + '_pr6" x="55" y="0"' + rc2 + rct +
+                rc1 + id + '_pr7" x="65" y="0"' + rc2 + rct +
+                rc1 + id + '_pr8" x="75" y="0"' + rc2 + rct +
+                rc1 + id + '_pr9" x="85" y="0"' + rc2 + rct +
+                rc1 + id + '_pr10" x="95" y="0"' + rc2 + rct +
+                rc1 + id + '_pr11" x="105" y="0"' + rc2 + rct +
+                rc1 + id + '_pr12" x="115" y="0"' + rc2 + rct +
+                rc1 + id + '_pr13" x="125" y="0"' + rc2 + rct +
+                rc1 + id + '_pr14" x="135" y="0"' + rc2 + rct +
+                rc1 + id + '_pr15" x="145" y="0"' + rc2 + rct +
+                rc1 + id + '_pr16" x="155" y="0"' + rc2 + rct +
+                rc4 + id + '_sn1" x="7" y="68"' + rc3 +
+                rc4 + id + '_sn2" x="17" y="68"' + rc3 +
+                rc4 + id + '_sn3" x="27" y="68"' + rc3 +
+                rc4 + id + '_sn4" x="37" y="68"' + rc3 +
+                rc4 + id + '_sn5" x="47" y="68"' + rc3 +
+                rc4 + id + '_sn6" x="57" y="68"' + rc3 +
+                rc4 + id + '_sn7" x="67" y="68"' + rc3 +
+                rc4 + id + '_sn8" x="77" y="68"' + rc3 +
+                rc4 + id + '_sn9" x="87" y="68"' + rc3 +
+                rc4 + id + '_sn10" x="97" y="68"' + rc3 +
+                rc4 + id + '_sn11" x="107" y="68"' + rc3 +
+                rc4 + id + '_sn12" x="117" y="68"' + rc3 +
+                rc4 + id + '_sn13" x="127" y="68"' + rc3 +
+                rc4 + id + '_sn14" x="137" y="68"' + rc3 +
+                rc4 + id + '_sn15" x="147" y="68"' + rc3 +
+                rc4 + id + '_sn16" x="157" y="68"' + rc3 +
+                rc4 + id + '_pid1" x="7" y="76"' + rc3 +
+                rc4 + id + '_pid2" x="17" y="76"' + rc3 +
+                rc4 + id + '_pid3" x="27" y="76"' + rc3 +
+                rc4 + id + '_pid4" x="37" y="76"' + rc3 +
+                rc4 + id + '_pid5" x="47" y="76"' + rc3 +
+                rc4 + id + '_pid6" x="57" y="76"' + rc3 +
+                rc4 + id + '_pid7" x="67" y="76"' + rc3 +
+                rc4 + id + '_pid8" x="77" y="76"' + rc3 +
+                rc4 + id + '_pid9" x="87" y="76"' + rc3 +
+                rc4 + id + '_pid10" x="97" y="76"' + rc3 +
+                rc4 + id + '_pid11" x="107" y="76"' + rc3 +
+                rc4 + id + '_pid12" x="117" y="76"' + rc3 +
+                rc4 + id + '_pid13" x="127" y="76"' + rc3 +
+                rc4 + id + '_pid14" x="137" y="76"' + rc3 +
+                rc4 + id + '_pid15" x="147" y="76"' + rc3 +
+                rc4 + id + '_pid16" x="157" y="76"' + rc3 +
+                rc4 + id + '_pid12" x="166" y="68" fill="#404040">dBHz</text>' +
+                rc4 + id + '_pid12" x="166" y="76" fill="#404040"> ID</text>' +
+                '</svg>';
+            document.getElementById(id).innerHTML = tmpl;
+        }
+
+        function isPortrait() { return window.innerHeight > window.innerWidth; }
+        if (isPortrait()) { alert("This page is best viewed in landscape mode"); }
+    </script>
+</head>
+
+<body id="body-home" class="uns" onload="createVerGauge('bar'); voltgauge.setValue(8);">
+    <div class="container bg-dark">
+        <div class="columns">
+            <div class="column col-12 col-sm-12 col-mx-auto">
+                <header class="navbar" id="navbar-main">
+                    <section class="navbar-section">
+                        <a href="https://www.nke-marine-electronics.com"><img src="nke.svg" class="navbar-brand img-responsive mt-2 mb-2" width="150" height="auto"></a>
+                    </section>
+                    <section class="navbar-center"><a href="index.html"><img src="guardxp.svg" width="200"
+                                class="navbar-brand img-responsive mt-2 mb-2 text-center" height="auto"></a></section>
+                    <section class="navbar-section">
+                        <div class="dropdown"><a class="btn btn-link dropdown-toggle" tabindex="0"><i
+                                    class="icon icon-menu"></i></a>
+                            <ul class="menu text-dark">
+                                <li class="menu-item"><a href="status.html">Status</a></li>
+                                <li class="menu-item"><a href="datamonitor.html">View Data</a></li>
+                                <li class="menu-item"><a href="settings.html">Settings</a></li>
+                            </ul>
+                        </div>
+                    </section>
+                </header>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="columns">
+            <div class="column col-12 col-sm-12 col-mx-auto text-left icon-home-top"><a href="index.html"><img
+                        src="home.svg" class="img-responsive mt-2 mb-2" Style="padding-top:5px;" width="25"
+                        height="auto"></a></div>
+        </div>
+    </div>
+    <section class="section-main setting-main">
+        <div class="container grid-lg">
+            <div class="columns border-block">
+                <div class="column col-12 col-sm-12 col-mx-auto">
+                    <div class="network-block text-dark" style="margin-left:25px; margin-right:25px;">
+                        <h3 class="setting-title">AIS Status</h3><br>
+                        <div class="columns">
+                            <div class="column col-12">
+                                <div class="columns">
+                                    <div class="column col-3 col-sm-12"><label class="form-label" for="ok1">VALID
+                                            MMSI</label></div>
+                                    <div class="column col-1"><img id="ok1" alt="OK1" src="cross.svg" width="30"></div>
+                                    <div class="column col-2"></div>
+                                    <div class="column col-1 col-ml-auto text-center" Style="padding-top:5px;"><label
+                                            class="btn btn-action s-circle" onclick="get_silent();"><img
+                                                src="silent.svg" width="22" height="22"></label></div>
+                                    <div class="column col-1 col-ml-auto text-center">
+                                        <div id="led1"></div>
+                                    </div>
+                                    <div class="column col-1 col-ml-auto text-center">
+                                        <div id="led2"></div>
+                                    </div>
+                                    <div class="column col-1 col-ml-auto text-center">
+                                        <div id="led3"></div>
+                                    </div>
+                                    <div class="column col-1 col-ml-auto text-center">
+                                        <div id="led4"></div>
+                                    </div>
+                                </div>
+                                <div class="columns">
+                                    <div class="column col-3 col-sm-12"><label class="form-label" for="ok2">GPS POSITION
+                                            FIX</label></div>
+                                    <div class="column col-1"><img id="ok2" alt="OK2" src="cross.svg" width="30"></div>
+                                    <div class="column col-3 col-ml-auto"></div>
+                                    <div class="column col-1 col-ml-auto text-center"><label
+                                            class="form-label">SILENT</label></div>
+                                    <div class="column col-1 col-ml-auto text-center"><label
+                                            class="form-label">STATUS</label></div>
+                                    <div class="column col-1 col-ml-auto text-center"><label
+                                            class="form-label">TIMEOUT</label></div>
+                                    <div class="column col-1 col-ml-auto text-center"><label
+                                            class="form-label">POWER</label></div>
+                                </div>
+                                <div class="columns">
+                                    <div class="column col-3 col-sm-12"><label class="form-label" for="ok3">AIS IS
+                                            TRANSMITTING</label></div>
+                                    <div class="column col-1"><img id="ok3" alt="OK3" src="cross.svg" width="30"></div>
+                                    <div class="column col-3 col-sm-12"><label id="tx_label" class="form-label">TX
+                                            COUNT: </label></div>
+                                </div>
+                                <div class="columns">
+                                    <div class="column col-3 col-sm-12"><label class="form-label" for="ok4">AIS
+                                            ANTENNA</label></div>
+                                    <div class="column col-1"><img id="ok4" alt="OK4" src="cross.svg" width="30"></div>
+                                    <div class="column col-3 col-sm-12"><label id="vswr_label" class="form-label">VSWR:
+                                        </label></div>
+                                    <div class="column col-3 col-ml-auto">
+                                        <div id="voltgauge" class="gauge-container"><label
+                                                class="form-label text-center">SUPPLY VOLTAGE</label></div>
+                                    </div>
+                                    <div class="column col-1"></div>
+                                </div>
+                                <div class="columns">
+                                    <div class="column col-3 col-sm-12"><label class="form-label" for="ok2">POSITION
+                                            REPORT RECEIVED</label></div>
+                                    <div class="column col-1"><img id="ok5" alt="OK5" src="cross.svg" width="30"></div>
+                                    <div class="column col-3 col-sm-12"><label id="rx_label" class="form-label">RX
+                                            COUNT: </label></div>
+                                </div><br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container grid-lg">
+            <div class="columns border-block">
+                <div class="column col-12 col-sm-12">
+                    <div class="network-block text-dark" style="margin-left:25px; margin-right:25px;">
+                        <h3 class="setting-title">GNSS Satellite Signal Levels</h3><br>
+                        <div class="column col-9 col-mx-auto" id="bar"></div>
+                        <div class="columns">
+                            <div class="column col-9 col-mx-auto"><br>
+                                <div class="column"><svg width="15" height="15">
+                                        <rect width="15" height="15" style="fill:#6cc24a" />
+                                    </svg><label class="brt">GPS SATELLITE USED FOR NAVIGATION</label></div>
+                                <div class="column"><svg width="15" height="15">
+                                        <rect width="15" height="15" style="fill:#009CDE" />
+                                    </svg><label class="brt">GPS SATELLITE NOT USED FOR NAVIGATION</label></div>
+                                <div class="column"><svg width="15" height="15">
+                                        <rect width="15" height="15" style="fill:#FFA700" />
+                                    </svg><label class="brt">SATELLITE IS AN SBAS SATELLITE</label></div>
+                            </div>
+                        </div>
+                    </div><br>
+                </div>
+            </div>
+        </div>
+        <div class="container grid-lg">
+            <div id="firware-update" class="columns border-block">
+                <div class="column col-8 col-sm-12 col-mx-auto text-dark text-intro firmware-block">
+                    <div class="columns firmware-top">
+                        <div class="column col-7 col-sm-9 col-mx-auto list-info-firmware">
+                            <br>
+                            <ul>
+                                <li>Product Serial Number: <span><strong id="serial"></strong></span></li>
+                                <li>Firmware version: <span><strong id="fwver"></strong></span></li>
+                            </ul>
+                        </div>
+                        <div class="column col-5 col-sm-9 col-mx-auto list-links-firmware">
+                            <br>
+                            <ul>
+                                <li><i class="icon icon-mail"></i><a href="mailto:support.marine-electronics@nke.fr">Send email
+                                        to support</a></li>
+                                <li><i class="icon icon-link"></i><a href="https://nke-marine-electronics.com/">Visit nke Marine Electronics</a></li>
+                                <li><i class="icon icon-link"></i><a href="https://www.nmea.org/">Visit NMEA Website</a>
+                                </li>
+                                <li><i class="icon icon-link"></i><a href="https://nke-marine-electronics.fr/wp-content/uploads/user_manuals/EN/00_GuardXP_um_EN.pdf">Open user manual</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <div class="container grid-lg">
+            <div class="columns">
+                <div class="column col-xs-12 col-lg-12">
+                    <div class="copyright text-center text-dark uns">
+                        <p>&copy; 2024 nke Marine Electronics Ltd</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="text/javascript" src="gauge.min.js"></script>
+</body>
+
+</html>

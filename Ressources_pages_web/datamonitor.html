@@ -1,0 +1,129 @@
+<!doctype html>
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>GuardXP Interface - Data Modes</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="spectre.min.css">
+    <link rel="stylesheet" href="nke.css" />
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+</head>
+
+<body id="body-home">
+    <div class="container bg-dark">
+        <div class="columns">
+            <div class="column col-12 col-sm-12 col-mx-auto">
+                <header class="navbar" id="navbar-main">
+                    <section class="navbar-section">
+                        <a href="https://www.nke-marine-electronics.com"><img src="nke.svg" class="navbar-brand img-responsive mt-2 mb-2" width="150" height="auto"></a>
+                    </section>
+                    <section class="navbar-center"><a href="index.html"><img src="guardxp.svg" width="200"
+                                class="navbar-brand img-responsive mt-2 mb-2 text-center" height="auto"></a></section>
+                    <section class="navbar-section">
+                        <div class="dropdown"><a class="btn btn-link dropdown-toggle" tabindex="0"><i
+                                    class="icon icon-menu"></i></a>
+                            <ul class="menu text-dark">
+                                <li class="menu-item"><a href="status.html">Status</a></li>
+                                <li class="menu-item"><a href="datamonitor.html">View Data</a></li>
+                                <li class="menu-item"><a href="settings.html">Settings</a></li>
+                            </ul>
+                        </div>
+                    </section>
+                </header>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="columns">
+            <div class="column col-12 col-sm-12 col-mx-auto text-left icon-home-top"><a href="index.html"><img
+                        src="home.svg" class="img-responsive mt-2 mb-2" Style="padding-top:5px;" width="25"
+                        height="auto"></a></div>
+        </div>
+    </div>
+    <section class="section-main setting-main">
+
+        <div class="container grid-lg">
+            <div id="firware-update" class="columns border-block">
+                <div class="column col-12 col-sm-12 col-mx-auto text-dark text-intro firmware-block">
+                    <br>
+                    <div class="column col-9 col-mx-auto">
+                        <header class="navbar">
+                            <section class="navbar-section"></section>
+                            <section class="navbar-center">
+                                <h3 class="setting-title">Data Monitor</h3>
+                            </section>
+                            <section class="navbar-section">
+                                <button class="btn btn-primary btn-sm" onclick='do_dlf();'>NMEA Data Filter</button>
+                            </section>
+                        </header>
+                    </div>
+
+
+                    <div id="myModal" class="modl">
+                        <div class="modl-content">
+                            <div class="modl-body">
+                                <center>
+                                    <span class="clse" onclick="close_x();">&times;</span>
+                                    <h6 id="modal_head"><br>NMEA Data Filter</h6>
+                                    <div class="column col-3 col-mx-auto">
+                                        <table class="table">
+                                            <tbody id="mdltable"></tbody>
+                                        </table>
+                                    </div><br>
+                                    <h6 id="modal_foot">
+                                        <button class="btn btn-success btn-sm" Style="Margin-Right:15px;"
+                                            onclick='save_dlf();'>Save</button>
+                                        <button class="btn btn-error btn-sm" onclick='clr_dlf();'>Reset</button>
+                                    </h6>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <textarea name="monitor" id="datamonitor"
+                        style="width:90%; max-width:90%; display: block; margin-left: auto; margin-right: auto; white-space: pre-wrap; overflow-x: scroll; overflow-y: hidden; border: none; color: black; background-color: transparent;"
+                        cols="100" rows="20"></textarea>
+
+
+                    <div class="column col-9 col-mx-auto">
+                        <header class="navbar">
+                            <section class="navbar-section">
+                                <label class="form-switch"><input type="checkbox" id="pauseButton"
+                                        onclick='toggle_pause();'>Pause<i class="form-icon"></i></label>
+                            </section>
+                            <section class="navbar-center">
+                                <label class="form-switch"><input type="checkbox" id="startStopLogging"
+                                        onClick="startStopLogging()">Start Log<i class="form-icon"></i></label>
+                            </section>
+                            <section class="navbar-section">
+                                <button class="btn btn-primary btn-sm" id="saveLog" onClick="saveLog()" Disabled><i
+                                        class="icon icon-download"></i> Save Log</button>
+                            </section>
+                        </header>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+        <footer>
+            <div class="container grid-lg">
+                <div class="columns">
+                    <div class="column col-xs-12 col-lg-12">
+                        <div class="copyright text-center text-dark uns">
+                            <p>&copy; 2024 nke Marine Electronics Ltd</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <script>

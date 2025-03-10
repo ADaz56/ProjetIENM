@@ -1,0 +1,249 @@
+@font-face {
+	font-family: "Roboto";
+	src: url(./ROBOTO_MEDIUM.woff2) format("woff2");
+}
+
+@font-face {
+	font-family: "MultiDisplay";
+	src: url(./multidisplay.woff2) format("woff2");
+}
+
+:root {
+	--menu-height: 100px;
+	--navbar-width-min: 180px;
+	--navbar-width-max: 300px;
+	--infos-width-min: 450px;
+	--infos-width-min-big: 650px;
+
+	--color-background: #151413;
+	--color-menu: #2a2826;
+	--color-menu-sub: #232221;
+	--color-active: #3c3b3a;
+	--color-hover: #3c3b3a;
+	--color-card: #3c3b3a;
+	--color-card-info: #2a2826;
+	--color-card-dis: #2a2826;
+	--color-card-imp: #6c6b6a;
+	--color-shadow: #000;
+	--color-border: #2a2826;
+
+	--color-btn: #3c3b3a;
+	--color-btn-hover: #303030;
+
+	--color-text: #e6e6e6;
+	--color-text-imp: #f0f0f0;
+	--color-text-inv: #212121;
+	--color-text-grey: #999;
+
+	--color-nke-yellow: #fbd10a;
+	--color-nke-yellow-imp: #FFA700;
+	--color-red: #f9423a;
+	--color-red-imp: #df0f06;
+	--color-red-dis: #6f0703;
+	--color-green: #6cc24a;
+	--color-green-imp: #4e9632;
+	--color-green-dis: #274b18;
+	--color-grey: #999;
+	--color-grey-dis: #3f3f3f;
+	--color-blue: #009CDE;
+	--color-black: #212121;
+	--debug: #5ee432;
+
+	--box-shadow: 0 10px 6px -6px #000;
+}
+
+/****************************** GENERAL ********************************/
+
+html,
+body {
+	background-color: var(--color-background);
+	color: var(--color-text);
+	font-family: "Roboto", sans-serif;
+}
+
+*,
+::after,
+::before {
+	box-sizing: border-box;
+}
+
+#body-home {
+	background: var(--color-background);
+}
+
+header.navbar#navbar-main {
+	border-bottom: solid 1px var(--color-nke-yellow);
+}
+
+header.navbar#navbar-main section {
+	padding: .5rem;
+}
+
+.bg-dark {
+	background: var(--color-menu) !important;
+	color: var(--color-text);
+}
+
+.bg-primary {
+	background: var(--color-nke-yellow) !important;
+	color: var(--color-text-inv) !important;
+}
+
+
+.text-dark {
+	color: var(--color-text) !important;
+}
+
+.quick .link {
+	background: var(--color-menu) !important;
+}
+
+.quick a:hover .link {
+	background: var(--color-nke-yellow) !important;
+	color: var(--color-text-inv) !important;
+}
+
+.menu {
+	background: var(--color-menu-sub) !important;
+}
+
+.menu .menu-item>a:focus,
+.menu .menu-item>a:hover {
+	background: var(--color-nke-yellow) !important;
+	color: var(--color-text-inv) !important;
+}
+
+.btn {
+	transition: all 0.3s ease;
+	box-shadow: var(--box-shadow);
+	font: 1em "Roboto", sans-serif;
+	border: none;
+	border-radius: 4px;
+	color: var(--color-text);
+	background-color: var(--color-btn);
+}
+
+.btn:hover:enabled,
+.btn:focus,
+.btn:hover {
+	background-color: var(--color-btn-hover);
+	border-color: var(--color-btn-hover);
+	cursor: pointer;
+}
+
+.btn.btn-link {
+	box-shadow: none;
+
+}
+
+.btn.btn-primary,
+.btn.btn-sm {
+	background: var(--color-btn);
+	border-color: var(--color-btn);
+	color: var(--color-text);
+}
+
+.btn.btn-primary:focus,
+.btn.btn-primary:hover,
+.btn.btn-sm:focus,
+.btn.btn-sm:hover {
+	background: var(--color-btn-hover);
+	border-color: var(--color-btn-hover);
+	color: var(--color-text);
+}
+
+.form-switch:hover {
+	color: var(--color-nke-yellow);
+}
+
+.form-checkbox input:checked+.form-icon,
+.form-radio input:checked+.form-icon,
+.form-switch input:checked+.form-icon {
+	background: var(--color-nke-yellow);
+	border-color: var(--color-nke-yellow);
+}
+
+.form-input {
+	display: block;
+	width: 100%;
+	padding: .375rem .75rem;
+	font-size: 1rem;
+	color: #495057;
+	background-color: #fff;
+	background-clip: padding-box;
+	border: 1px solid #ced4da;
+	border-radius: .25rem;
+	transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+	font-family: "Roboto", sans-serif;
+}
+
+.form-input:focus {
+	border-color: var(--color-nke-yellow);
+	box-shadow: 0 0 0 .1rem rgba(87, 85, 217, .2);
+}
+
+.form-control.disabled,
+.form-control:disabled {
+	background-color: #aaa;
+	border-color: #aaa;
+}
+
+.network-block .form-input,
+.network-block .form-select {
+	color: var(--color-text);
+}
+
+.form-select:not([multiple]):not([size]) {
+	background: var(--color-grey-dis) url("") no-repeat right .35rem center/.4rem .5rem;
+}
+
+.form-input:not(:placeholder-shown):invalid {
+	border-color: var(--color-red);
+}
+
+#firware-update .firmware-block .list-links-firmware li a {
+	color: var(--color-nke-yellow);
+}
+
+#firware-update .firmware-block .form-input {
+	color: var(--color-text);
+}
+
+#firware-update .firmware-block .list-links-firmware li a:hover {
+	color: var(--color-nke-yellow-imp);
+}
+
+a.active,
+.tab .tab-item.active a {
+	border-bottom-color: var(--color-nke-yellow);
+	color: var(--color-nke-yellow);
+}
+
+.tab .tab-item a:focus,
+.tab .tab-item a:hover {
+	color: var(--color-nke-yellow);
+}
+
+.network-block .tab-network li a:hover {
+	border-bottom: 2px solid var(--color-nke-yellow);
+}
+
+#table-main-block {
+	border: 1px solid var(--color-border);
+}
+
+#datamonitor {
+	color: var(--color-text) !important;
+}
+
+.network-block .tab-network li a {
+	color: var(--color-text);
+}
+
+.modl-content {
+	background: var(--color-menu);
+}
+
+.modl-body {
+	color: var(--color-text);
+}

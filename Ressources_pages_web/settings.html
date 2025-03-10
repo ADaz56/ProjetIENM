@@ -1,0 +1,571 @@
+<!doctype html>
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta http-equiv="cache-control" content="no-cache, must-revalidate, post-check=0, pre-check=0" />
+    <meta http-equiv="cache-control" content="max-age=0" />
+    <meta http-equiv="expires" content="0" />
+    <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <title>GuardXP Interface - Settings</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="spectre.min.css">
+    <link rel="stylesheet" href="nke.css" />
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+</head>
+
+<body id="body-home" class="uns">
+    <div class="container bg-dark">
+        <div class="columns">
+            <div class="column col-12 col-sm-12 col-mx-auto">
+                <header class="navbar" id="navbar-main">
+                    <section class="navbar-section">
+                        <a href="https://www.nke-marine-electronics.com"><img src="nke.svg" class="navbar-brand img-responsive mt-2 mb-2" width="150" height="auto"></a>
+                    </section>
+                    <section class="navbar-center"><a href="index.html"><img src="guardxp.svg" width="200"
+                                class="navbar-brand img-responsive mt-2 mb-2 text-center" height="auto"></a></section>
+                    <section class="navbar-section">
+                        <div class="dropdown"><a class="btn btn-link dropdown-toggle" tabindex="0"><i
+                                    class="icon icon-menu"></i></a>
+                            <ul class="menu text-dark">
+                                <li class="menu-item"><a href="status.html">Status</a></li>
+                                <li class="menu-item"><a href="datamonitor.html">View Data</a></li>
+                                <li class="menu-item"><a href="settings.html">Settings</a></li>
+                            </ul>
+                        </div>
+                    </section>
+                </header>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="columns">
+            <div class="column col-12 col-sm-12 col-mx-auto text-left icon-home-top"><a href="index.html"><img
+                        src="home.svg" class="img-responsive mt-2 mb-2" Style="padding-top:5px;" width="25"
+                        height="auto"></a></div>
+        </div>
+    </div>
+
+
+    <div id="pModal" class="modl" onclick="close_pmdl();">
+        <div class="modl-content">
+            <div class="modl-body">
+                <section id="success-block" class="section-main">
+                    <div class="container grid-lg">
+                        <div class="columns">
+                            <div class="column col-xs-12 col-lg-12 text-center text-dark success-col">
+                                <div class="image-top">
+                                    <img src="error.svg" class="img-responsive icon-success icon-animation"
+                                        alt="Success Icon" width="70" height="auto">
+                                </div>
+                                <br>
+                                <p>WiFi Password should be minimum 8 characters long.<br><br>Please select a longer
+                                    password!</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <div id="errModal" class="modl" onclick="close_errmdl();">
+        <div class="modl-content">
+            <div class="modl-body">
+                <section id="success-block" class="section-main">
+                    <div class="container grid-lg">
+                        <div class="columns">
+                            <div class="column col-xs-12 col-lg-12 text-center text-dark success-col">
+                                <div class="image-top">
+                                    <img src="error.svg" class="img-responsive icon-success icon-animation"
+                                        alt="Success Icon" width="70" height="auto">
+                                </div>
+                                <br>
+                                <p>An error has occurred in connecting to the selected wireless network and AP mode has
+                                    been temporarily enabled, so that you can still access this unit.
+                                    Please check that the wireless network that you wanted this unit to connect to is
+                                    fully powered up and available.
+                                    If the selected wireless network is available, please double check that the wireless
+                                    password has been entered correctly and has not been changed.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <div id="pgnModal" class="modl" onclick="close_mdl();">
+        <div class="modl-content">
+            <div class="modl-body"><br><br>
+                <section id="success-block" class="section-main">
+                    <div class="container grid-lg">
+                        <div class="columns">
+                            <div class="column col-xs-12 col-lg-12 text-center text-dark success-col">
+                                <div class="image-top">
+                                    <img src="check.svg" class="img-responsive icon-success icon-animation"
+                                        alt="Success Icon" width="70" height="auto">
+                                </div>
+                                <br>
+                                <h3 id="modal_title">File updated successfully!</h3>
+                                <h6>System will now restart, please wait 20 seconds, then reconnect.</h6>
+                            </div>
+                        </div><br><br>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <section id="mind" class="section-main setting-main">
+        <div class="container grid-lg">
+            <div class="columns border-block">
+                <div class="column col-12">
+                    <div class="network-block text-dark" style="margin:25px;">
+                        <h3 class="setting-title">Network Settings</h3>
+                        <form name="netform">
+                            <div class="columns">
+                                <div class="column col-6 col-xs-12">
+                                    <div id="ap">
+                                        <h6 class="text-center">ACCESS POINT</h6>
+                                        <div class="columns">
+                                            <div class="column col-3 col-sm-12">
+                                                <label class="form-label" for="ssid_local">LOCAL SSID</label>
+                                            </div>
+                                            <div class="column col-8 col-sm-12">
+                                                <input class="form-input" type="input" name="ssid_local" value="">
+                                            </div>
+                                        </div>
+                                        <div class="columns">
+                                            <div class="column col-3 col-sm-12">
+                                                <label class="form-label" for="pass_local">PASSWORD</label>
+                                            </div>
+                                            <div class="column col-8 col-sm-12 d-flex">
+                                                <input class="form-input" type="password" name="pass_local"
+                                                    value="">&nbsp;
+                                                <label class="btn btn-action s-circle" onclick="hidepw();"><img
+                                                        src="view.svg" width="22" height="22"></label>
+                                            </div>
+                                        </div>
+                                        <div class="columns">
+                                            <div class="column col-3 col-sm-12">
+                                                <label class="form-label" for="local_ip">LOCAL IP</label>
+                                            </div>
+                                            <div class="column col-8 col-sm-12">
+                                                <input class="form-input" name="local_ip" type="text" minlength="7"
+                                                    maxlength="15" size="15"
+                                                    pattern="^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$">
+                                            </div>
+                                        </div>
+                                        <div class="columns">
+                                            <div class="column col-3 col-sm-12">
+                                                <label class="form-label" for="local_subnet">NETMASK</label>
+                                            </div>
+                                            <div class="column col-8 col-sm-12">
+                                                <input class="form-input" name="local_subnet" id="local_subnet"
+                                                    type="text" minlength="7" maxlength="15" size="15"
+                                                    pattern="^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="column col-6 col-xs-12">
+                                    <div id="sta">
+                                        <h6 class="text-center"><svg width="25" height="25">
+                                                <path id="w4"
+                                                    style=" stroke:none;fill-rule:nonzero;fill:#e6e6e6;fill-opacity:1;"
+                                                    d="M 11.402344 3.4375 C 15.976562 3.105469 20.660156 4.820312 23.925781 8.042969 C 24.355469 8.484375 24.300781 9.253906 23.847656 9.660156 C 23.433594 10.148438 22.601562 10.15625 22.175781 9.679688 C 19.378906 6.988281 15.433594 5.535156 11.5625 5.824219 C 8.34375 6.03125 5.226562 7.417969 2.890625 9.636719 C 2.683594 9.851562 2.417969 10.023438 2.113281 10.039062 C 1.347656 10.128906 0.640625 9.328125 0.804688 8.582031 C 0.851562 8.3125 1.023438 8.089844 1.222656 7.910156 C 3.957031 5.292969 7.625 3.683594 11.402344 3.4375 Z M 11.402344 3.4375 " />
+                                                <path id="w3"
+                                                    style=" stroke:none;fill-rule:nonzero;fill:#e6e6e6;fill-opacity:1;"
+                                                    d="M 11.289062 7.921875 C 14.792969 7.542969 18.433594 8.835938 20.914062 11.339844 C 21.304688 11.78125 21.253906 12.507812 20.824219 12.90625 C 20.433594 13.386719 19.640625 13.441406 19.195312 13.003906 C 17.605469 11.4375 15.457031 10.445312 13.230469 10.28125 C 10.527344 10.054688 7.765625 11.082031 5.839844 12.988281 C 5.394531 13.457031 4.566406 13.402344 4.167969 12.90625 C 3.738281 12.496094 3.699219 11.753906 4.113281 11.324219 C 6.023438 9.414062 8.605469 8.199219 11.289062 7.921875 Z M 11.289062 7.921875 " />
+                                                <path id="w2"
+                                                    style=" stroke:none;fill-rule:nonzero;fill:#e6e6e6;fill-opacity:1;"
+                                                    d="M 11.804688 12.351562 C 14.019531 12.132812 16.308594 12.980469 17.847656 14.582031 C 18.269531 15.019531 18.21875 15.777344 17.773438 16.183594 C 17.371094 16.667969 16.5625 16.703125 16.125 16.246094 C 15.257812 15.355469 14.054688 14.792969 12.8125 14.722656 C 11.398438 14.621094 9.96875 15.179688 8.964844 16.171875 C 8.71875 16.449219 8.351562 16.621094 7.976562 16.578125 C 7.105469 16.515625 6.503906 15.351562 7.101562 14.65625 C 8.3125 13.34375 10.035156 12.527344 11.804688 12.351562 Z M 11.804688 12.351562 " />
+                                                <path id="w1"
+                                                    style=" stroke:none;fill-rule:nonzero;fill:#e6e6e6;fill-opacity:1;"
+                                                    d="M 12.148438 16.488281 C 13.574219 16.246094 15.019531 17.425781 15.066406 18.871094 C 15.199219 20.289062 13.945312 21.632812 12.523438 21.601562 C 11.246094 21.648438 10.058594 20.585938 9.949219 19.3125 C 9.765625 17.976562 10.808594 16.640625 12.148438 16.488281 Z M 12.148438 16.488281 " />
+                                            </svg> &nbsp; STATION</h6>
+                                        <div class="columns">
+                                            <div class="column col-3 col-sm-12">
+                                                <label class="form-label" for="ssid_remote">STATION SSID</label>
+                                            </div>
+                                            <div class="col-8 col-sm-12 d-flex aptable_input">
+                                                <select class="form-select text-dark" id="apoints" name="ssid_remote"
+                                                    value="apselect"></select>
+                                                &nbsp; <button id="scanbtn" class="btn btn-primary btn-action s-circle"
+                                                    type="button" onclick='scan();'><i
+                                                        class="icon icon-refresh"></i></button>
+                                            </div>
+                                        </div>
+                                        <div class="columns">
+                                            <div class="column col-3 col-sm-12">
+                                                <label class="form-label" for="pass_remote">PASSWORD</label>
+                                            </div>
+                                            <div class="col-8 col-sm-12 d-flex aptable_input">
+                                                <input class="form-input " type="password" id="pass_remote"
+                                                    name="pass_remote" value="">&nbsp;
+                                                <label class="btn btn-action s-circle" onclick="hidepw();"><img
+                                                        src="view.svg" width="22" height="22"></label>
+                                            </div>
+                                        </div>
+                                        <div class="columns">
+                                            <div class="column col-3 col-sm-12">
+                                                <label class="form-label" for="remote_ip">IP AT STATION</label>
+                                            </div>
+                                            <div class="column col-8 col-sm-12">
+                                                <input class="form-input" name="remote_ip" id="remote_ip" disabled
+                                                    type="text" minlength="7" maxlength="15" size="15"
+                                                    pattern="^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$">
+                                            </div>
+                                        </div>
+                                        <div class="columns">
+                                            <div class="column col-3 col-sm-12">
+                                                <label class="form-label" for="remote_subnet">NETMASK</label>
+                                            </div>
+                                            <div class="column col-8 col-sm-12">
+                                                <input class="form-input" name="remote_subnet" id="remote_subnet"
+                                                    disabled type="text" minlength="7" maxlength="15" size="15"
+                                                    pattern="^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$">
+                                            </div>
+                                        </div>
+                                        <div class="columns">
+                                            <div class="column col-3 col-sm-12"></div>
+                                            <div class="column col-8 col-sm-12"><label class="form-switch">DHCP Client<input type="checkbox" id="dhcp_sw" name="dhcp_sw"
+                                                        onClick="dhcp()"><i class="form-icon"></i></label></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="column col-12 col-xs-12">
+                                    <br>
+                                    <div class="columns">
+                                        <div class="column col-6 col-xs-12">
+                                            <div class="columns">
+                                                <div class="column col-3"><label class="form-label">WiFi MODE</label>
+                                                </div>
+                                                <div class="column col-8">
+                                                    <div class="btn-group">
+                                                        <button id="apsta2" type="button" class="btn btn-sm"
+                                                            onclick="apsta(2)">&nbsp;Access Point&nbsp;</button>
+                                                        <button id="apsta3" type="button" class="btn btn-sm"
+                                                            onclick="apsta(3)">&nbsp;Station&nbsp;</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <br>
+                                            <div class="columns">
+                                                <div class="column col-3 col-sm-12">
+                                                    <label class="form-label" for="wifi_channel">WiFi CHANNEL</label>
+                                                </div>
+                                                <div class="column col-3 col-sm-12">
+                                                    <input class="form-input" type="number" name="wifi_channel" min="1"
+                                                        max="13">
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="column col-6 col-xs-12">
+                                            <div id="bw">
+                                                <div class="columns">
+                                                    <div class="column col-4"></div>
+                                                    <div class="column col-8"><button class="btn btn-sm" type="button"
+                                                            onclick="get_def();">Load Defaults</button></div>
+                                                    <br><br>
+                                                    <div class="column col-4"></div>
+                                                    <div class="column col-8">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="form-group button-block text-center">
+                            <button class="btn btn-primary btn-sm" type="button" onclick="post();">Update
+                                Settings</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container grid-lg">
+            <div class="columns border-block">
+                <div class="column col-12">
+                    <div class="network-block text-dark" style="margin:25px;">
+
+                        <form name="rform">
+                            <div class="columns">
+                                <div class="column col-12 col-xs-12">
+                                    <h3 class="setting-title">Data Connections</h3><br>
+                                    <div class="columns">
+                                        <div class="column col-1"></div>
+                                        <div class="column col-5 col-xs-12">
+                                            <div class="columns">
+                                                <div class="column col-3 col-sm-12">
+                                                    <label class="form-label" for="tcp_port">TCP PORT</label>
+                                                </div>
+                                                <div class="column col-4 col-sm-12"><input class="form-input"
+                                                        name="tcp_port" for="tcp_port" type="number" min="0"
+                                                        max="65535"></div>
+                                            </div>
+                                            <div class="columns">
+                                                <div class="column col-3 col-sm-12">
+                                                    <label class="form-label" for="udp_port">UDP PORT</label>
+                                                </div>
+                                                <div class="column col-4 col-sm-12"><input class="form-input"
+                                                        name="udp_port" for="udp_port" type="number" min="0"
+                                                        max="65535"></div>
+                                            </div>
+                                        </div>
+                                        <div class="column col-6 col-xs-12">
+                                            <div class="columns">
+                                                <div class="column col-12 col-sm-12">
+                                                    <label class="form-label">ACTIVE TCP CONNECTIONS (3 Max.)</label>
+                                                </div>
+                                            </div>
+                                            <div class="columns">
+                                                <div class="column col-6 col-sm-12"><label
+                                                        class="form-label"><span><strong
+                                                                id="tcpconn">-</strong></span></label></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br><br>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="form-group button-block text-center"><button class="btn btn-primary btn-sm"
+                                type="button" onclick="post();">Update Settings</button></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <form id="sform" name="sform" method="post" action="sensor.cgi">
+            <div class="container grid-lg">
+                <div class="columns border-block">
+                    <div class="column col-12 col-sm-12">
+                        <div class="network-block text-dark" style="margin-left:25px; margin-right:25px;">
+                            <h3 class="setting-title">Vessel Details</h3>
+                            <br><img alt="dim" src="dim.svg" align="right">
+                            <div class="columns">
+                                <div class="column col-12">
+                                    <div class="columns">
+                                        <div class="column col-3 col-sm-12">
+                                            <label class="form-label" for="ships_name">VESSEL`S NAME</label>
+                                        </div>
+                                        <div class="column col-8">
+                                            <input class="form-input" type="input" id="ships_name" name="ships_name"
+                                                maxlength="20" style="text-transform:uppercase">
+                                        </div>
+                                    </div>
+                                    <div class="columns">
+                                        <div class="column col-3 col-sm-12">
+                                            <label class="form-label" for="call_sign">CALL SIGN</label>
+                                        </div>
+                                        <div class="column col-5">
+                                            <input class="form-input" type="input" id="call_sign" name="call_sign"
+                                                maxlength="7" style="text-transform:uppercase">
+                                        </div>
+                                    </div>
+                                    <div class="columns">
+                                        <div class="column col-3 col-sm-12">
+                                            <label class="form-label" for="mmsi_number">MMSI NUMBER</label>
+                                        </div>
+                                        <div class="column col-5">
+                                            <input class="form-input" type="number" id="mmsi_number" name="mmsi_number"
+                                                min="200000000" max="999999999" style="font-weight: bold;">
+                                        </div>
+                                    </div>
+                                    <div class="columns">
+                                        <div class="column col-3 col-sm-12">
+                                            <label class="form-label" for="vessel_type">VESSEL TYPE</label>
+                                        </div>
+                                        <div class="column col-8">
+                                            <select class="form-select text-dark" name="vessel_type" id="vessel_type">
+                                                <option value="0">0 - Not specified</option>
+                                                <option value="30">30 - Fishing</option>
+                                                <option value="31">31 - Towing</option>
+                                                <option value="32">32 - Towing/breadth exc 25m</option>
+                                                <option value="33">33 - Underwater operations</option>
+                                                <option value="34">34 - Diving operations</option>
+                                                <option value="35">35 - Military operations</option>
+                                                <option value="36">36 - Sailing</option>
+                                                <option value="37">37 - Pleasure craft</option>
+                                                <option value="50">50 - Pilot vessel</option>
+                                                <option value="51">51 - Search and rescue vessels</option>
+                                                <option value="52">52 - Tugs</option>
+                                                <option value="53">53 - Port tenders</option>
+                                                <option value="54">54 - Anti-pollution fac</option>
+                                                <option value="55">55 - Law enforcement vessels</option>
+                                                <option value="58">58 - Medical transports</option>
+                                                <option value="59">59 - Ships RR Res. No. 18</option>
+                                                <option value="60">60 - Passenger ship</option>
+                                                <option value="70">70 - Cargo ship</option>
+                                                <option value="80">80 - Tanker</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="columns">
+                                        <div class="column col-3 col-sm-12">
+                                            <label class="form-label" for="dim_a">DIMENSION A</label>
+                                        </div>
+                                        <div class="column col-3 d-flex"><input class="form-input" type="number"
+                                                id="dim_a" name="dim_a" min="0" max="511"><span
+                                                style="margin-top: 5px; margin-left:-20px;">m</span></div>
+                                    </div>
+                                    <div class="columns">
+                                        <div class="column col-3 col-sm-12">
+                                            <label class="form-label" for="dim_b">DIMENSION B</label>
+                                        </div>
+                                        <div class="column col-3 d-flex"><input class="form-input" type="number"
+                                                id="dim_b" name="dim_b" min="0" max="511"><span
+                                                style="margin-top: 5px; margin-left:-20px;">m</span></div>
+                                    </div>
+                                    <div class="columns">
+                                        <div class="column col-3 col-sm-12">
+                                            <label class="form-label" for="dim_c">DIMENSION C</label>
+                                        </div>
+                                        <div class="column col-3 d-flex"><input class="form-input" type="number"
+                                                id="dim_c" name="dim_c" min="0" max="63"><span
+                                                style="margin-top: 5px; margin-left:-20px;">m</span></div>
+                                    </div>
+                                    <div class="columns">
+                                        <div class="column col-3 col-sm-12">
+                                            <label class="form-label" for="dim_d">DIMENSION D</label>
+                                        </div>
+                                        <div class="column col-3 d-flex"><input class="form-input" type="number"
+                                                id="dim_d" name="dim_d" min="0" max="63"><span
+                                                style="margin-top: 5px; margin-left:-20px;">m</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group button-block text-center">
+                            <button class="btn btn-primary btn-sm" type="submit" name="submit">Update Settings</button>
+                        </div><br>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+        <div class="container grid-lg">
+            <div id="firware-update" class="columns border-block">
+                <div class="column col-8 col-sm-12 col-mx-auto text-dark text-intro text-center firmware-block">
+                    <br>
+                    <h3 class="setting-title">Firmware update</h3>
+                    <p id="status">Only use GuardXP.bin file provided by nke Marine Electronics</p>
+                    <a href="https://ftp2.nke-marine-electronics.com/files/GuardXP.bin" style="text-decoration: none;"><button class="form-group form-input input-sm submit bg-primary text-light" style="margin-bottom: .4rem;">Download last firmware from nke server</button></a>
+                    <form id="fwid" name="fwid" action="/ota" enctype="multipart/form-data" method="post">
+                        <div class="form-group"><input class="form-input input-sm" type="file" onchange="fw();"
+                                id="selectedFile" accept=".bin" name="partition" size="40"></div>
+                        <div class="form-group"><input class="form-input input-sm submit bg-primary text-light"
+                                type="submit" value="Upload selected firmware on target"></div>
+                    </form>
+                    <script>
+                        (function (win, doc) {
+                            'use strict';
+                            if (!win.XMLHttpRequest || !win.FormData || !win.addEventListener || !doc.querySelectorAll) {
+                                return;
+                            }
+                            function hijaxForm(formElement) {
+                                var progressBar;
+                                var lded;
+                                var xhr;
+                                function addProgressBar() {
+                                    progressBar = doc.createElement('progress');
+                                    progressBar.setAttribute('min', '0');
+                                    progressBar.setAttribute('max', '100');
+                                    progressBar.setAttribute('value', '0');
+                                    formElement.appendChild(progressBar);
+                                    lded = document.createElement("LABEL");
+                                    formElement.appendChild(lded);
+                                }
+                                function updateProgressBar(ev) {
+                                    if (ev.lengthComputable) {
+                                        var pc = (ev.loaded / ev.total) * 100;
+                                        progressBar.value = pc;
+                                        lded.innerHTML = ' &nbsp; &nbsp; ' + Math.floor(pc) + ' &#37; &nbsp; &nbsp; ' + ev.loaded + ' / ' + ev.total + ' Bytes';
+                                        if (ev.loaded == ev.total) { open_mdl(); }
+                                    }
+                                }
+                                function ajax(elem) {
+                                    addProgressBar();
+                                    var method = elem.getAttribute('method');
+                                    var url = elem.getAttribute('action');
+                                    var data = new FormData(elem);
+                                    xhr = new XMLHttpRequest();
+                                    xhr.open(method, url, true);
+                                    xhr.onload = function (ev) {
+                                        win.location = url;
+                                    };
+                                    xhr.upload.onprogress = function (ev) {
+                                        updateProgressBar(ev);
+                                    }; xhr.send(data);
+                                }
+                                formElement.addEventListener('submit', function (ev) {
+                                    ajax(this);
+                                    ev.preventDefault();
+                                }, false);
+                            }
+                            var formElements = doc.querySelectorAll('form[id="fwid"]');
+                            for (var i = 0; i < formElements.length; i = i + 1) {
+                                hijaxForm(formElements[i]);
+                            }
+
+                        }(this, this.document));
+                    </script>
+                    <br>
+                </div>
+            </div>
+        </div>
+        <div class="container grid-lg">
+            <div id="firware-update" class="columns border-block">
+                <div class="column col-8 col-sm-12 col-mx-auto text-dark text-intro firmware-block">
+                    <div class="columns firmware-top">
+                        <div class="column col-7 col-sm-9 col-mx-auto list-info-firmware">
+                            <br>
+                            <ul>
+                                <li>Product Serial Number: <span><strong id="serial"></strong></span></li>
+                                <li>Firmware version: <span><strong id="fwver"></strong></span></li>
+                            </ul>
+                        </div>
+                        <div class="column col-5 col-sm-9 col-mx-auto list-links-firmware">
+                            <br>
+                            <ul>
+                                <li><i class="icon icon-mail"></i><a href="mailto:support.marine-electronics@nke.fr">Send email
+                                        to support</a></li>
+                                <li><i class="icon icon-link"></i><a href="https://nke-marine-electronics.com/">Visit nke Marine Electronics</a></li>
+                                <li><i class="icon icon-link"></i><a href="https://www.nmea.org/">Visit NMEA Website</a>
+                                </li>
+                                <li><i class="icon icon-link"></i><a href="https://nke-marine-electronics.fr/wp-content/uploads/user_manuals/EN/00_GuardXP_um_EN.pdf">Open user manual</a>
+                                </li>								
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <div class="container grid-lg">
+            <div class="columns">
+                <div class="column col-xs-12 col-lg-12">
+                    <div class="copyright text-center text-dark uns">
+                        <p>&copy; 2024 nke Marine Electronics Ltd</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
