@@ -21,7 +21,6 @@
             --navbar-width-max: 300px;
             --infos-width-min: 450px;
             --infos-width-min-big: 650px;
-
             --color-background: #151413;
             --color-menu: #2a2826;
             --color-menu-sub: #232221;
@@ -33,15 +32,12 @@
             --color-card-imp: #6c6b6a;
             --color-shadow: #000;
             --color-border: #2a2826;
-
             --color-btn: #3c3b3a;
             --color-btn-hover: #303030;
-
             --color-text: #e6e6e6;
             --color-text-imp: #f0f0f0;
             --color-text-inv: #212121;
             --color-text-grey: #999;
-
             --color-nke-yellow: #fbd10a;
             --color-nke-yellow-imp: #FFA700;
             --color-red: #f9423a;
@@ -55,12 +51,10 @@
             --color-blue: #009CDE;
             --color-black: #212121;
             --debug: #5ee432;
-
             --box-shadow: 0 10px 6px -6px #000;
         }
 
-        html,
-        body {
+        html, body {
             background-color: var(--color-background);
             color: var(--color-text);
             font-family: "Roboto", sans-serif;
@@ -68,9 +62,7 @@
             min-height: 100vh;
         }
 
-        *,
-        ::after,
-        ::before {
+        *, ::after, ::before {
             box-sizing: border-box;
         }
 
@@ -99,6 +91,7 @@
 
         .section {
             margin-bottom: 2rem;
+            position: relative;
         }
 
         h1, h2 {
@@ -151,6 +144,11 @@
             color: var(--color-text);
         }
 
+        .btn + img {
+            vertical-align: middle;
+            transition: all 0.3s ease;
+        }
+
         label {
             display: block;
             margin: 10px 0;
@@ -173,6 +171,13 @@
             width: 100%;
         }
 
+        .user-info {
+            color: var(--color-text-grey);
+            text-align: right;
+            padding: 10px;
+            font-size: 0.9em;
+        }
+
         section {
             margin-bottom: 2rem;
             text-align: center;
@@ -180,9 +185,13 @@
     </style>
 </head>
 <body>
+    <div class="user-info">
+        
+    </div>
+
     <header class="navbar" id="navbar-main">
         <section class="navbar-section">
-            <a href="#"><img alt="nke" src="nke.svg" class="navbar-brand" width="150" height="auto"></a>
+            <a href="#"><img src="logo.svg" class="navbar-brand" width="150" height="auto"></a>
         </section>
         <section class="navbar-center">Configuration Interface</section>
         <section class="navbar-section">
@@ -202,7 +211,8 @@
                 <h2>Seuil de Hauteur d'Eau</h2>
                 <label for="threshold">Seuil acceptable de hauteur d'eau (cm) :</label>
                 <input type="number" id="threshold" name="threshold" min="0" class="form-input">
-                <button class="btn" onclick="saveThreshold()">Enregistrer le Seuil</button>
+                <button class="btn" onclick="saveThreshold()">Enregistrer le Seuil de Hauteur ></button>
+                <img id="thresholdStatus" style="display: none; margin-left: 10px; width: 20px; height: 20px;" src="" alt="status">
             </section>
         </div>
         
@@ -212,6 +222,7 @@
                 <label for="nmea-type">Type de Trame NMEA 0183 :</label>
                 <input type="text" id="nmea-type" name="nmea-type" class="form-input">
                 <button class="btn" onclick="saveNmeaConfig()">Enregistrer la Configuration NMEA</button>
+                <img id="nmeaStatus" style="display: none; margin-left: 10px; width: 20px; height: 20px;" src="" alt="status">
             </section>
         </div>
         
@@ -225,6 +236,7 @@
                 <label for="security">Type de Sécurité :</label>
                 <input type="text" id="security" name="security" class="form-input">
                 <button class="btn" onclick="saveWifiConfig()">Enregistrer la Configuration WiFi</button>
+                <img id="wifiStatus" style="display: none; margin-left: 10px; width: 20px; height: 20px;" src="" alt="status">
             </section>
         </div>
     </div>
@@ -234,13 +246,55 @@
     </footer>
 
     <script>
+        function showStatusIcon(icon, isValid) {
+            icon.style.display = 'inline';
+            if (isValid) {
+                icon.src = 'check.svg';
+                icon.alt = 'Succès';
+            } else {
+                icon.src = 'error.svg';
+                icon.alt = 'Erreur';
+            }
+            setTimeout(() => {
+                icon.style.display = 'none';
+            }, 3000);
+        }
+
         function saveThreshold() {
             const threshold = document.getElementById('threshold').value;
-            if (threshold) {
+            const statusIcon = document.getElementById('thresholdStatus');
+            
+            if (threshold && parseFloat(threshold) > 0) {
                 localStorage.setItem('waterThreshold', threshold);
-                alert('Seuil de hauteur d\'eau enregistré avec succès !');
+                showStatusIcon(statusIcon, true);
             } else {
-                alert('Veuillez entrer une valeur de seuil valide.');
+                showStatusIcon(statusIcon, false);
+            }
+        }
+
+        function saveNmeaConfig() {
+            const nmeaType = document.getElementById('nmea-type').value;
+            const statusIcon = document.getElementById('nmeaStatus');
+            
+            if (nmeaType && nmeaType.trim() !== '') {
+                localStorage.setItem('nmeaType', nmeaType);
+                showStatusIcon(statusIcon, true);
+            } else {
+                showStatusIcon(statusIcon, false);
+            }
+        }
+
+        function saveWifiConfig() {
+            const ssid = document.getElementById('ssid').value;
+            const password = document.getElementById('password').value;
+            const security = document.getElementById('security').value;
+            const statusIcon = document.getElementById('wifiStatus');
+            
+            if (ssid && password && security) {
+                localStorage.setItem('wifiConfig', JSON.stringify({ ssid, password, security }));
+                showStatusIcon(statusIcon, true);
+            } else {
+                showStatusIcon(statusIcon, false);
             }
         }
 
@@ -251,32 +305,10 @@
             }
         }
 
-        function saveNmeaConfig() {
-            const nmeaType = document.getElementById('nmea-type').value;
-            if (nmeaType) {
-                localStorage.setItem('nmeaType', nmeaType);
-                alert('Configuration NMEA enregistrée avec succès !');
-            } else {
-                alert('Veuillez entrer un type de trame NMEA valide.');
-            }
-        }
-
         function loadNmeaConfig() {
             const nmeaType = localStorage.getItem('nmeaType');
             if (nmeaType) {
                 document.getElementById('nmea-type').value = nmeaType;
-            }
-        }
-
-        function saveWifiConfig() {
-            const ssid = document.getElementById('ssid').value;
-            const password = document.getElementById('password').value;
-            const security = document.getElementById('security').value;
-            if (ssid && password && security) {
-                localStorage.setItem('wifiConfig', JSON.stringify({ ssid, password, security }));
-                alert('Configuration WiFi enregistrée avec succès !');
-            } else {
-                alert('Veuillez remplir tous les champs de configuration WiFi.');
             }
         }
 
