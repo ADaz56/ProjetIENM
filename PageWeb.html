@@ -79,6 +79,12 @@
             border-bottom: solid 1px var(--color-nke-yellow);
         }
 
+        .navbar .nav-link {
+            color: var(--color-text);
+            text-decoration: none;
+            margin: 0 1rem;
+        }
+
         .bg-dark {
             background: var(--color-menu) !important;
             color: var(--color-text);
@@ -162,6 +168,13 @@
             bottom: 0;
             width: 100%;
         }
+
+        .status-icon {
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
@@ -172,7 +185,8 @@
         <section class="navbar-center">Compas NKE 9X</section>
         <section class="navbar-section">
             <div class="dropdown">
-                <a class="btn btn-link dropdown-toggle" tabindex="0">
+                <a class="nav-link" href="settingnke.html">Settings</a>
+                <a class="nav-link" href="PageWebHauteurEau.html">Hauteur d'Eau</a>
                     <i class="icon icon-menu"></i>
                 </a>
             </div>
@@ -200,7 +214,8 @@
                     <input type="number" id="roll" name="roll" class="form-input" required>
                 </div>
 
-                <button type="button" class="btn" onclick="afficherCompas()">Afficher</button>
+                <center><button type="button" class="btn" onclick="afficherCompas()">Afficher</button>
+                <img id="compas-status" class="status-icon" src="" alt=""></center>
             </form>
             <div id="compas-output" class="output-section"></div>
         </div>
@@ -212,7 +227,8 @@
                     <label for="baudrate">Vitesse de transmission :</label>
                     <input type="number" id="baudrate" name="baudrate" class="form-input" required>
                 </div>
-                <button type="button" class="btn" onclick="afficherSerie()">Afficher</button>
+                <center><button type="button" class="btn" onclick="afficherSerie()">Afficher</button>
+                <img id="serie-status" class="status-icon" src="" alt=""></center>
             </form>
             <div id="serie-output" class="output-section"></div>
         </div>
@@ -224,7 +240,8 @@
                     <label for="nmea-type">Type de trame NMEA 0183:</label>
                     <input type="text" id="nmea-type" name="nmea-type" class="form-input" required>
                 </div>
-                <button type="button" class="btn" onclick="afficherNmea()">Afficher</button>
+                <center><button type="button" class="btn" onclick="afficherNmea()">Afficher</button>
+                <img id="nmea-status" class="status-icon" src="" alt=""></center>
             </form>
             <div id="nmea-output" class="output-section"></div>
         </div>
@@ -247,7 +264,8 @@
                     <input type="text" id="security" name="security" class="form-input" required>
                 </div>
 
-                <button type="button" class="btn" onclick="afficherWifi()">Afficher</button>
+                <center><button type="button" class="btn" onclick="afficherWifi()">Afficher</button>
+                <img id="wifi-status" class="status-icon" src="" alt=""><center>
             </form>
             <div id="wifi-output" class="output-section"></div>
         </div>
@@ -309,31 +327,70 @@
             if (!port) {
                 connecterCompas();
             }
+            const heading = document.getElementById('heading').value;
+            const pitch = document.getElementById('pitch').value;
+            const roll = document.getElementById('roll').value;
+            const statusIcon = document.getElementById('compas-status');
+
+            if (heading !== '' && pitch !== '' && roll !== '') {
+                statusIcon.src = 'check.svg';
+                statusIcon.alt = 'Success';
+            } else {
+                statusIcon.src = 'error.svg';
+                statusIcon.alt = 'Error';
+            }
         }
 
         function afficherSerie() {
-            var baudrate = document.getElementById('baudrate').value;
-            document.getElementById('serie-output').innerHTML = 
-                '<h3>Liaison Série</h3>' +
-                '<p>Vitesse de transmission: ' + baudrate + ' baud</p>';
+            const baudrate = document.getElementById('baudrate').value;
+            const statusIcon = document.getElementById('serie-status');
+
+            if (baudrate !== '') {
+                document.getElementById('serie-output').innerHTML = 
+                    '<h3>Liaison Série</h3>' +
+                    '<p>Vitesse de transmission: ' + baudrate + ' baud</p>';
+                statusIcon.src = 'check.svg';
+                statusIcon.alt = 'Success';
+            } else {
+                statusIcon.src = 'error.svg';
+                statusIcon.alt = 'Error';
+            }
         }
 
         function afficherNmea() {
-            var nmeaType = document.getElementById('nmea-type').value;
-            document.getElementById('nmea-output').innerHTML = 
-                '<h3>Type de Trame NMEA 0183</h3>' +
-                '<p>Type de trame: ' + nmeaType + '</p>';
+            const nmeaType = document.getElementById('nmea-type').value;
+            const statusIcon = document.getElementById('nmea-status');
+
+            if (nmeaType !== '') {
+                document.getElementById('nmea-output').innerHTML = 
+                    '<h3>Type de Trame NMEA 0183</h3>' +
+                    '<p>Type de trame: ' + nmeaType + '</p>';
+                statusIcon.src = 'check.svg';
+                statusIcon.alt = 'Success';
+            } else {
+                statusIcon.src = 'error.svg';
+                statusIcon.alt = 'Error';
+            }
         }
 
         function afficherWifi() {
-            var ssid = document.getElementById('ssid').value;
-            var password = document.getElementById('password').value;
-            var security = document.getElementById('security').value;
-            document.getElementById('wifi-output').innerHTML = 
-                '<h3>Paramètres de la Liaison Wifi</h3>' +
-                '<p>SSID: ' + ssid + '</p>' +
-                '<p>Mot de passe: ' + password + '</p>' +
-                '<p>Type de sécurité: ' + security + '</p>';
+            const ssid = document.getElementById('ssid').value;
+            const password = document.getElementById('password').value;
+            const security = document.getElementById('security').value;
+            const statusIcon = document.getElementById('wifi-status');
+
+            if (ssid !== '' && password !== '' && security !== '') {
+                document.getElementById('wifi-output').innerHTML = 
+                    '<h3>Paramètres de la Liaison Wifi</h3>' +
+                    '<p>SSID: ' + ssid + '</p>' +
+                    '<p>Mot de passe: ' + password + '</p>' +
+                    '<p>Type de sécurité: ' + security + '</p>';
+                statusIcon.src = 'check.svg';
+                statusIcon.alt = 'Success';
+            } else {
+                statusIcon.src = 'error.svg';
+                statusIcon.alt = 'Error';
+            }
         }
     </script>
 </body>
