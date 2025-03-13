@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration Interface nke</title>
+    <style>
+        @font-face {
+            font-family: "Roboto";
+            src: url(./ROBOTO_MEDIUM.woff2) format("woff2");
+        }
+
+        @font-face {
+            font-family: "MultiDisplay";
+            src: url(./multidisplay.woff2) format("woff2");
+        }
+
+        :root {
+            --menu-height: 100px;
+            --navbar-width-min: 180px;
+            --navbar-width-max: 300px;
+            --infos-width-min: 450px;
+            --infos-width-min-big: 650px;
+            --color-background: #151413;
+            --color-menu: #2a2826;
+            --color-menu-sub: #232221;
+            --color-active: #3c3b3a;
+            --color-hover: #3c3b3a;
+            --color-card: #3c3b3a;
+            --color-card-info: #2a2826;
+            --color-card-dis: #2a2826;
+            --color-card-imp: #6c6b6a;
+            --color-shadow: #000;
+            --color-border: #2a2826;
+            --color-btn: #3c3b3a;
+            --color-btn-hover: #303030;
+            --color-text: #e6e6e6;
+            --color-text-imp: #f0f0f0;
+            --color-text-inv: #212121;
+            --color-text-grey: #999;
+            --color-nke-yellow: #fbd10a;
+            --color-nke-yellow-imp: #FFA700;
+            --color-red: #f9423a;
+            --color-red-imp: #df0f06;
+            --color-red-dis: #6f0703;
+            --color-green: #6cc24a;
+            --color-green-imp: #4e9632;
+            --color-green-dis: #274b18;
+            --color-grey: #999;
+            --color-grey-dis: #3f3f3f;
+            --color-blue: #009CDE;
+            --color-black: #212121;
+            --debug: #5ee432;
+            --box-shadow: 0 10px 6px -6px #000;
+        }
+
+        html, body {
+            background-color: var(--color-background);
+            color: var(--color-text);
+            font-family: "Roboto", sans-serif;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        *, ::after, ::before {
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .navbar {
+            background: var(--color-menu);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: solid 1px var(--color-nke-yellow);
+        }
+
+        .bg-dark {
+            background: var(--color-menu) !important;
+            color: var(--color-text);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        h1, h2 {
+            color: var(--color-text);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-input {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            padding: .375rem .75rem;
+            margin: 0.5rem auto;
+            font-size: 1rem;
+            color: var(--color-text);
+            background-color: var(--color-menu-sub);
+            border: 1px solid var(--color-border);
+            border-radius: .25rem;
+            transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+            font-family: "Roboto", sans-serif;
+        }
+
+        .form-input:focus {
+            border-color: var(--color-nke-yellow);
+            box-shadow: 0 0 0 .1rem rgba(251, 209, 10, .2);
+            outline: none;
+        }
+
+        .btn {
+            transition: all 0.3s ease;
+            box-shadow: var(--box-shadow);
+            font: 1em "Roboto", sans-serif;
+            border: none;
+            border-radius: 4px;
+            color: var(--color-text);
+            background-color: var(--color-btn);
+            padding: 10px 20px;
+            margin: 10px 0;
+            cursor: pointer;
+            width: auto;
+            min-width: 200px;
+        }
+
+        .btn:hover:enabled,
+        .btn:focus,
+        .btn:hover {
+            background-color: var(--color-btn-hover);
+            border-color: var(--color-btn-hover);
+            color: var(--color-text);
+        }
+
+        .btn + img {
+            vertical-align: middle;
+            transition: all 0.3s ease;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0;
+            color: var(--color-text);
+            text-align: center;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            color: var(--color-text);
+            padding: 1rem;
+            background: var(--color-menu);
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .user-info {
+            color: var(--color-text-grey);
+            text-align: right;
+            padding: 10px;
+            font-size: 0.9em;
+        }
+
+        /* Styles pour les onglets */
+        .navbar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 20px;
+        }
+
+        .navbar-menu a {
+            color: var(--color-text);
+            text-decoration: none;
+            padding: 5px 15px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar-menu a:hover,
+        .navbar-menu a.active {
+            background-color: var(--color-active);
+            color: var(--color-nke-yellow);
+        }
+
+        .status-icon {
+            display: none;
+            margin-left: 10px;
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar" id="navbar-main">
+        <section class="navbar-section">
+            <a href="#"><img src="logo.svg" class="navbar-brand" width="150" height="auto"></a>
+        </section>
+        <section class="navbar-center">
+            <ul class="navbar-menu">
+                <li><a href="#" class="active">Configuration Générale</a></li>
+                <li><a href="PageWebHauteurEau.html">Hauteur d'Eau</a></li>
+            </ul>
+        </section>
+        <section class="navbar-section">
+        </section>
+    </header>
+
+    <div class="container">
+        <h1>Interface de Configuration nke</h1>
+        
+        <div class="bg-dark">
+            <section id="network-settings">
+                <h2>Paramètres Réseau</h2>
+                <form>
+                    <label for="ip-address">Adresse IP :</label>
+                    <input type="text" id="ip-address" name="ip-address" class="form-input" pattern="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$">
+                    
+                    <label for="subnet-mask">Masque de sous-réseau :</label>
+                    <input type="text" id="subnet-mask" name="subnet-mask" class="form-input">
+                    
+                    <label for="gateway">Passerelle par défaut :</label>
+                    <input type="text" id="gateway" name="gateway" class="form-input">
+                    
+                    <div class="text-center">
+                        <button class="btn" onclick="saveNetworkSettings()">Enregistrer les paramètres réseau</button>
+                        <img id="networkStatus" class="status-icon" src="" alt="status">
+                    </div>
+                </form>
+            </section>
+        </div>
+        
+        <div class="bg-dark">
+            <section id="device-settings">
+                <h2>Paramètres de l'appareil</h2>
+                <form>
+                    <label for="device-name">Nom de l'appareil :</label>
+                    <input type="text" id="device-name" name="device-name" class="form-input">
+                    
+                    <label for="device-id">ID de l'appareil :</label>
+                    <input type="text" id="device-id" name="device-id" class="form-input">
+                    
+                    <div class="text-center">
+                        <button class="btn" onclick="saveDeviceSettings()">Enregistrer les paramètres</button>
+                        <img id="deviceStatus" class="status-icon" src="" alt="status">
+                    </div>
+                </form>
+            </section>
+        </div>
+        
+        <div class="bg-dark">
+            <section id="system-settings">
+                <h2>Paramètres Système</h2>
+                <form>
+                    <label for="update-interval">Intervalle de mise à jour (secondes) :</label>
+                    <input type="number" id="update-interval" name="update-interval" class="form-input" min="1">
+                    
+                    <label for="logging-level">Niveau de journalisation :</label>
+                    <select id="logging-level" name="logging-level" class="form-input">
+                        <option value="debug">Debug</option>
+                        <option value="info">Info</option>
+                        <option value="warning">Warning</option>
+                        <option value="error">Error</option>
+                    </select>
+                    
+                    <div class="text-center">
+                        <button class="btn" onclick="saveSystemSettings()">Enregistrer les paramètres système</button>
+                        <img id="systemStatus" class="status-icon" src="" alt="status">
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 nke Marine Electronics</p>
+    </footer>
+
+    <script>
+        function showStatusIcon(iconId, isValid) {
+            const icon = document.getElementById(iconId);
+            icon.style.display = 'inline';
+            if (isValid) {
+                icon.src = 'check.svg';
+                icon.alt = 'Succès';
+            } else {
+                icon.src = 'error.svg';
+                icon.alt = 'Erreur';
+            }
+            setTimeout(() => {
+                icon.style.display = 'none';
+            }, 3000);
+        }
+
+        function validateIPAddress(ip) {
+            const pattern = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+            return pattern.test(ip);
+        }
+
+        function saveNetworkSettings() {
+            const ipAddress = document.getElementById('ip-address').value;
+            const subnetMask = document.getElementById('subnet-mask').value;
+            const gateway = document.getElementById('gateway').value;
+            
+            const isValid = validateIPAddress(ipAddress) && validateIPAddress(subnetMask) && validateIPAddress(gateway);
+            showStatusIcon('networkStatus', isValid);
+        }
+
+        function saveDeviceSettings() {
+            const deviceName = document.getElementById('device-name').value;
+            const deviceId = document.getElementById('device-id').value;
+            
+            const isValid = deviceName.length > 0 && deviceId.length > 0;
+            showStatusIcon('deviceStatus', isValid);
+        }
+
+        function saveSystemSettings() {
+            const updateInterval = document.getElementById('update-interval').value;
+            const loggingLevel = document.getElementById('logging-level').value;
+            
+            const isValid = updateInterval > 0 && loggingLevel;
+            showStatusIcon('systemStatus', isValid);
+        }
+    </script>
+</body>
+</html>
