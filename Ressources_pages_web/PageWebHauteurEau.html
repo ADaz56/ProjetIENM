@@ -60,16 +60,23 @@
             font-family: "Roboto", sans-serif;
             margin: 0;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        *, ::after, ::before {
-            box-sizing: border-box;
+        .user-info {
+            background-color: var(--color-menu-sub);
+            color: var(--color-text-grey);
+            padding: 8px 20px;
+            text-align: right;
+            font-size: 0.9em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
+        .datetime {
+            color: var(--color-nke-yellow);
         }
 
         .navbar {
@@ -81,17 +88,39 @@
             border-bottom: solid 1px var(--color-nke-yellow);
         }
 
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--color-text);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background-color: var(--color-hover);
+            color: var(--color-nke-yellow);
+        }
+
+        .container {
+            flex: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
         .bg-dark {
-            background: var(--color-menu) !important;
+            background: var(--color-menu);
             color: var(--color-text);
             border-radius: 8px;
             padding: 20px;
             margin-bottom: 20px;
-        }
-
-        .section {
-            margin-bottom: 2rem;
-            position: relative;
+            box-shadow: var(--box-shadow);
         }
 
         h1, h2 {
@@ -111,7 +140,7 @@
             background-color: var(--color-menu-sub);
             border: 1px solid var(--color-border);
             border-radius: .25rem;
-            transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+            transition: all 0.3s ease;
             font-family: "Roboto", sans-serif;
         }
 
@@ -140,13 +169,7 @@
         .btn:focus,
         .btn:hover {
             background-color: var(--color-btn-hover);
-            border-color: var(--color-btn-hover);
-            color: var(--color-text);
-        }
-
-        .btn + img {
-            vertical-align: middle;
-            transition: all 0.3s ease;
+            color: var(--color-nke-yellow);
         }
 
         label {
@@ -156,49 +179,35 @@
             text-align: center;
         }
 
-        .text-center {
-            text-align: center;
-        }
-
-        footer {
-            margin-top: 2rem;
-            text-align: center;
-            color: var(--color-text);
-            padding: 1rem;
-            background: var(--color-menu);
-            position: relative;
-            bottom: 0;
-            width: 100%;
-        }
-
-        .user-info {
-            color: var(--color-text-grey);
-            text-align: right;
-            padding: 10px;
-            font-size: 0.9em;
-        }
-
         section {
             margin-bottom: 2rem;
             text-align: center;
         }
+
+        footer {
+            background: var(--color-menu);
+            color: var(--color-text);
+            text-align: center;
+            padding: 1rem;
+            margin-top: auto;
+            border-top: 1px solid var(--color-nke-yellow);
+        }
     </style>
 </head>
 <body>
-    <div class="user-info">
-        
-    </div>
 
     <header class="navbar" id="navbar-main">
         <section class="navbar-section">
-            <a href="#"><img src="logo.svg" class="navbar-brand" width="150" height="auto"></a>
+            <a href="#"><img src="logo.svg" class="navbar-brand" width="150" height="auto" alt="Logo NKE"></a>
         </section>
-        <section class="navbar-center">Configuration Interface</section>
+        <section class="navbar-center">
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Configuration Interface</a>
+                <a href="settingnke.html" class="nav-link">Paramètres NKE</a>
+            </div>
+        </section>
         <section class="navbar-section">
             <div class="dropdown">
-                <a class="btn btn-link dropdown-toggle" tabindex="0">
-                    <i class="icon icon-menu"></i>
-                </a>
             </div>
         </section>
     </header>
@@ -246,6 +255,21 @@
     </footer>
 
     <script>
+        // Mise à jour de l'heure
+        function updateDateTime() {
+            const now = new Date();
+            const formatted = now.getUTCFullYear() + '-' + 
+                            String(now.getUTCMonth() + 1).padStart(2, '0') + '-' +
+                            String(now.getUTCDate()).padStart(2, '0') + ' ' +
+                            String(now.getUTCHours()).padStart(2, '0') + ':' +
+                            String(now.getUTCMinutes()).padStart(2, '0') + ':' +
+                            String(now.getUTCSeconds()).padStart(2, '0');
+            document.getElementById('current-time').textContent = formatted + ' UTC';
+        }
+
+        // Mise à jour toutes les secondes
+        setInterval(updateDateTime, 1000);
+
         function showStatusIcon(icon, isValid) {
             icon.style.display = 'inline';
             if (isValid) {
@@ -325,6 +349,7 @@
             loadThreshold();
             loadNmeaConfig();
             loadWifiConfig();
+            updateDateTime();
         }
     </script>
 </body>
