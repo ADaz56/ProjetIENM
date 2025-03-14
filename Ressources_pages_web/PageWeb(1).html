@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compas NKE 9X</title>
+    <style>
+        @font-face {
+            font-family: "Roboto";
+            src: url(./ROBOTO_MEDIUM.woff2) format("woff2");
+        }
+
+        @font-face {
+            font-family: "MultiDisplay";
+            src: url(./multidisplay.woff2) format("woff2");
+        }
+
+        :root {
+            --menu-height: 100px;
+            --navbar-width-min: 180px;
+            --navbar-width-max: 300px;
+            --infos-width-min: 450px;
+            --infos-width-min-big: 650px;
+
+            --color-background: #151413;
+            --color-menu: #2a2826;
+            --color-menu-sub: #232221;
+            --color-active: #3c3b3a;
+            --color-hover: #3c3b3a;
+            --color-card: #3c3b3a;
+            --color-card-info: #2a2826;
+            --color-card-dis: #2a2826;
+            --color-card-imp: #6c6b6a;
+            --color-shadow: #000;
+            --color-border: #2a2826;
+
+            --color-btn: #3c3b3a;
+            --color-btn-hover: #303030;
+
+            --color-text: #e6e6e6;
+            --color-text-imp: #f0f0f0;
+            --color-text-inv: #212121;
+            --color-text-grey: #999;
+
+            --color-nke-yellow: #fbd10a;
+            --color-nke-yellow-imp: #FFA700;
+            --color-red: #f9423a;
+            --color-grey: #999;
+            --box-shadow: 0 10px 6px -6px #000;
+        }
+
+        html,
+        body {
+            background-color: var(--color-background);
+            color: var(--color-text);
+            font-family: "Roboto", sans-serif;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        *,
+        ::after,
+        ::before {
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .navbar {
+            background: var(--color-menu);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: solid 1px var(--color-nke-yellow);
+        }
+
+        .navbar .nav-link {
+            color: var(--color-text);
+            text-decoration: none;
+            margin: 0 1rem;
+        }
+
+        .bg-dark {
+            background: var(--color-menu) !important;
+            color: var(--color-text);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        h1, h2, h3 {
+            color: var(--color-text);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .form-input {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            padding: .375rem .75rem;
+            margin: 0.5rem auto;
+            font-size: 1rem;
+            color: var(--color-text);
+            background-color: var(--color-menu-sub);
+            border: 1px solid var(--color-border);
+            border-radius: .25rem;
+            transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+            font-family: "Roboto", sans-serif;
+        }
+
+        .form-input:focus {
+            border-color: var(--color-nke-yellow);
+            box-shadow: 0 0 0 .1rem rgba(251, 209, 10, .2);
+            outline: none;
+        }
+
+        .btn {
+            transition: all 0.3s ease;
+            box-shadow: var(--box-shadow);
+            font: 1em "Roboto", sans-serif;
+            border: none;
+            border-radius: 4px;
+            color: var(--color-text);
+            background-color: var(--color-btn);
+            padding: 10px 20px;
+            margin: 10px 0;
+            cursor: pointer;
+            width: auto;
+            min-width: 200px;
+        }
+
+        .btn:hover {
+            background-color: var(--color-btn-hover);
+        }
+
+        label {
+            display: block;
+            margin: 10px 0;
+            color: var(--color-text);
+        }
+
+        .output-section {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--color-menu-sub);
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            color: var(--color-text);
+            padding: 1rem;
+            background: var(--color-menu);
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .status-icon {
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar" id="navbar-main">
+        <section class="navbar-section">
+            <a href="#"><img alt="nke" src="nke.svg" class="navbar-brand" width="150" height="auto"></a>
+        </section>
+        <section class="navbar-center">Compas NKE 9X</section>
+        <section class="navbar-section">
+            <div class="dropdown">
+                <a class="nav-link" href="settingnke.html">Settings</a>
+                <a class="nav-link" href="PageWebHauteurEau.html">Hauteur d'Eau</a>
+                    <i class="icon icon-menu"></i>
+                </a>
+            </div>
+        </section>
+    </header>
+
+    <div class="container">
+        <h1>Paramétrage du Compas NKE 9X</h1>
+
+        <div class="bg-dark">
+            <h2>Données du Compas</h2>
+            <form id="compas-form">
+                <div class="form-group">
+                    <label for="heading">Cap :</label>
+                    <input type="number" id="heading" name="heading" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="pitch">Tangage :</label>
+                    <input type="number" id="pitch" name="pitch" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="roll">Roulis :</label>
+                    <input type="number" id="roll" name="roll" class="form-input" required>
+                </div>
+
+                <center><button type="button" class="btn" onclick="afficherCompas()">Afficher</button>
+                <img id="compas-status" class="status-icon" src="" alt=""></center>
+            </form>
+            <div id="compas-output" class="output-section"></div>
+        </div>
+
+        <div class="bg-dark">
+            <h2>Liaison Série</h2>
+            <form id="serie-form">
+                <div class="form-group">
+                    <label for="baudrate">Vitesse de transmission :</label>
+                    <input type="number" id="baudrate" name="baudrate" class="form-input" required>
+                </div>
+                <center><button type="button" class="btn" onclick="afficherSerie()">Afficher</button>
+                <img id="serie-status" class="status-icon" src="" alt=""></center>
+            </form>
+            <div id="serie-output" class="output-section"></div>
+        </div>
+
+        <div class="bg-dark">
+            <h2>Type de Trame NMEA 0183 à Logger</h2>
+            <form id="nmea-form">
+                <div class="form-group">
+                    <label for="nmea-type">Type de trame NMEA 0183:</label>
+                    <input type="text" id="nmea-type" name="nmea-type" class="form-input" required>
+                </div>
+                <center><button type="button" class="btn" onclick="afficherNmea()">Afficher</button>
+                <img id="nmea-status" class="status-icon" src="" alt=""></center>
+            </form>
+            <div id="nmea-output" class="output-section"></div>
+        </div>
+
+        <div class="bg-dark">
+            <h2>Paramètres de la Liaison Wifi</h2>
+            <form id="wifi-form">
+                <div class="form-group">
+                    <label for="ssid">SSID:</label>
+                    <input type="text" id="ssid" name="ssid" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Mot de passe:</label>
+                    <input type="password" id="password" name="password" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="security">Type de sécurité:</label>
+                    <input type="text" id="security" name="security" class="form-input" required>
+                </div>
+
+                <center><button type="button" class="btn" onclick="afficherWifi()">Afficher</button>
+                <img id="wifi-status" class="status-icon" src="" alt=""><center>
+            </form>
+            <div id="wifi-output" class="output-section"></div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 nke Marine Electronics Ltd</p>
+    </footer>
+
+    <script>
+        let port;
+        let reader;
+
+        async function connecterCompas() {
+            try {
+                port = await navigator.serial.requestPort();
+                await port.open({ baudRate: 9600 });
+                reader = port.readable.getReader();
+                lireTramesCompas();
+            } catch (e) {
+                console.error('Erreur de connexion au port série', e);
+            }
+        }
+
+        async function lireTramesCompas() {
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) {
+                    console.log('Lecture terminée');
+                    reader.releaseLock();
+                    break;
+                }
+                const trame = new TextDecoder().decode(value);
+                traiterTramesCompas(trame);
+            }
+        }
+
+        function traiterTramesCompas(trame) {
+            if (trame.startsWith('$HEHDT')) {
+                const parts = trame.split(',');
+                const heading = parseFloat(parts[1]);
+                document.getElementById('heading').value = heading;
+                document.getElementById('compas-output').innerHTML = 
+                    '<h3>Données du Compas</h3>' +
+                    '<p>Cap: ' + heading + '°</p>';
+            } else if (trame.startsWith('$HEHRT')) {
+                const parts = trame.split(',');
+                const pitch = parseFloat(parts[1]);
+                const roll = parseFloat(parts[2]);
+                document.getElementById('pitch').value = pitch;
+                document.getElementById('roll').value = roll;
+                document.getElementById('compas-output').innerHTML += 
+                    '<p>Tangage: ' + pitch + '°</p>' +
+                    '<p>Roulis: ' + roll + '°</p>';
+            }
+        }
+
+        function afficherCompas() {
+            if (!port) {
+                connecterCompas();
+            }
+            const heading = document.getElementById('heading').value;
+            const pitch = document.getElementById('pitch').value;
+            const roll = document.getElementById('roll').value;
+            const statusIcon = document.getElementById('compas-status');
+
+            if (heading !== '' && pitch !== '' && roll !== '') {
+                statusIcon.src = 'check.svg';
+                statusIcon.alt = 'Success';
+            } else {
+                statusIcon.src = 'error.svg';
+                statusIcon.alt = 'Error';
+            }
+        }
+
+        function afficherSerie() {
+            const baudrate = document.getElementById('baudrate').value;
+            const statusIcon = document.getElementById('serie-status');
+
+            if (baudrate !== '') {
+                document.getElementById('serie-output').innerHTML = 
+                    '<h3>Liaison Série</h3>' +
+                    '<p>Vitesse de transmission: ' + baudrate + ' baud</p>';
+                statusIcon.src = 'check.svg';
+                statusIcon.alt = 'Success';
+            } else {
+                statusIcon.src = 'error.svg';
+                statusIcon.alt = 'Error';
+            }
+        }
+
+        function afficherNmea() {
+            const nmeaType = document.getElementById('nmea-type').value;
+            const statusIcon = document.getElementById('nmea-status');
+
+            if (nmeaType !== '') {
+                document.getElementById('nmea-output').innerHTML = 
+                    '<h3>Type de Trame NMEA 0183</h3>' +
+                    '<p>Type de trame: ' + nmeaType + '</p>';
+                statusIcon.src = 'check.svg';
+                statusIcon.alt = 'Success';
+            } else {
+                statusIcon.src = 'error.svg';
+                statusIcon.alt = 'Error';
+            }
+        }
+
+        function afficherWifi() {
+            const ssid = document.getElementById('ssid').value;
+            const password = document.getElementById('password').value;
+            const security = document.getElementById('security').value;
+            const statusIcon = document.getElementById('wifi-status');
+
+            if (ssid !== '' && password !== '' && security !== '') {
+                document.getElementById('wifi-output').innerHTML = 
+                    '<h3>Paramètres de la Liaison Wifi</h3>' +
+                    '<p>SSID: ' + ssid + '</p>' +
+                    '<p>Mot de passe: ' + password + '</p>' +
+                    '<p>Type de sécurité: ' + security + '</p>';
+                statusIcon.src = 'check.svg';
+                statusIcon.alt = 'Success';
+            } else {
+                statusIcon.src = 'error.svg';
+                statusIcon.alt = 'Error';
+            }
+        }
+    </script>
+</body>
+</html>
