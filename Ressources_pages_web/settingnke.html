@@ -295,7 +295,124 @@
     <footer>
         <p>&copy; 2024 nke Marine Electronics</p>
     </footer>
+<script>
+    // Logging utility function
+    function logToFile(action, data) {
+        const timestamp = new Date().toISOString();
+        const logEntry = {
+            timestamp: timestamp,
+            user: 'CabonM', // Using the provided user login
+            action: action,
+            data: data
+        };
 
+        // Create a Blob containing the log entry
+        const logText = JSON.stringify(logEntry) + '\n';
+        const blob = new Blob([logText], { type: 'text/plain' });
+        
+        // Create a download link for the log file
+        const downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.download = `nke_config_log_${timestamp.split('T')[0]}.txt`;
+        
+        // Append to existing log file if possible, otherwise create new
+        fetch(downloadLink.download)
+            .then(response => response.text())
+            .catch(() => '')
+            .then(existingContent => {
+                const newBlob = new Blob([existingContent + logText], { type: 'text/plain' });
+                downloadLink.href = URL.createObjectURL(newBlob);
+                downloadLink.click();
+            });
+    }
+
+    function showStatusIcon(iconId, isValid) {
+        const icon = document.getElementById(iconId);
+        icon.style.display = 'inline';
+        if (isValid) {
+            icon.src = 'check.svg';
+            icon.alt = 'Succès';
+        } else {
+            icon.src = 'error.svg';
+            icon.alt = 'Erreur';
+        }
+        setTimeout(() => {
+            icon.style.display = 'none';
+        }, 3000);
+    }
+
+    function validateIPAddress(ip) {
+        const pattern = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+        return pattern.test(ip);
+    }
+
+    function saveNetworkSettings() {
+        const ipAddress = document.getElementById('ip-address').value;
+        const subnetMask = document.getElementById('subnet-mask').value;
+        const gateway = document.getElementById('gateway').value;
+        
+        const isValid = validateIPAddress(ipAddress) && validateIPAddress(subnetMask) && validateIPAddress(gateway);
+        showStatusIcon('networkStatus', isValid);
+
+        // Log the network settings change
+        logToFile('saveNetworkSettings', {
+            ipAddress: ipAddress,
+            subnetMask: subnetMask,
+            gateway: gateway,
+            status: isValid ? 'success' : 'error',
+            validationErrors: !isValid ? {
+                ipValid: validateIPAddress(ipAddress),
+                subnetValid: validateIPAddress(subnetMask),
+                gatewayValid: validateIPAddress(gateway)
+            } : null
+        });
+    }
+
+    function saveDeviceSettings() {
+        const deviceName = document.getElementById('device-name').value;
+        const deviceId = document.getElementById('device-id').value;
+        
+        const isValid = deviceName.length > 0 && deviceId.length > 0;
+        showStatusIcon('deviceStatus', isValid);
+
+        // Log the device settings change
+        logToFile('saveDeviceSettings', {
+            deviceName: deviceName,
+            deviceId: deviceId,
+            status: isValid ? 'success' : 'error',
+            validationError: !isValid ? 'Empty device name or ID' : null
+        });
+    }
+
+    function saveSystemSettings() {
+        const updateInterval = document.getElementById('update-interval').value;
+        const loggingLevel = document.getElementById('logging-level').value;
+        
+        const isValid = updateInterval > 0 && loggingLevel;
+        showStatusIcon('systemStatus', isValid);
+
+        // Log the system settings change
+        logToFile('saveSystemSettings', {
+            updateInterval: updateInterval,
+            loggingLevel: loggingLevel,
+            status: isValid ? 'success' : 'error',
+            validationError: !isValid ? 'Invalid update interval or missing logging level' : null
+        });
+    }
+
+    // Add event listeners for form submissions
+    document.addEventListener('DOMContentLoaded', function() {
+        // Log page load
+        logToFile('pageLoad', {
+            page: 'Configuration Interface nke',
+            timestamp: new Date().toISOString()
+        });
+
+        // Add form submission prevention
+        const forms = document.querySelectorAll('form');
+        forms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault
     <script>
         function showStatusIcon(iconId, isValid) {
             const icon = document.getElementById(iconId);
