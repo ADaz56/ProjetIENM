@@ -275,6 +275,187 @@
         <p>&copy; 2024 nke Marine Electronics Ltd</p>
     </footer>
 
+<script>
+    // Logging utility function
+    function logToFile(action, data, user = 'CabonM') {
+        const timestamp = new Date().toISOString();
+        const logEntry = {
+            timestamp: timestamp,
+            user: user,
+            action: action,
+            data: data
+        };
+
+        // Create a Blob containing the log entry
+        const logText = JSON.stringify(logEntry) + '\n';
+        const blob = new Blob([logText], { type: 'text/plain' });
+        
+        // Create a download link for the log file
+        const downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.download = `compas_nke_log_${timestamp.split('T')[0]}.txt`;
+        
+        // Append to existing log file if possible, otherwise create new
+        fetch(downloadLink.download)
+            .then(response => response.text())
+            .catch(() => '')
+            .then(existingContent => {
+                const newBlob = new Blob([existingContent + logText], { type: 'text/plain' });
+                downloadLink.href = URL.createObjectURL(newBlob);
+                downloadLink.click();
+            });
+    }
+
+    // Modify the existing functions to include logging:
+    let port;
+    let reader;
+
+    async function connecterCompas() {
+        try {
+            port = await navigator.serial.requestPort();
+            await port.open({ baudRate: 9600 });
+            reader = port.readable.getReader();
+            logToFile('connecterCompas', { status: 'success', baudRate: 9600 });
+            lireTramesCompas();
+        } catch (e) {
+            console.error('Erreur de connexion au port série', e);
+            logToFile('connecterCompas', { status: 'error', error: e.message });
+        }
+    }
+
+    function afficherCompas() {
+        if (!port) {
+            connecterCompas();
+        }
+        const heading = document.getElementById('heading').value;
+        const pitch = document.getElementById('pitch').value;
+        const roll = document.getElementById('roll').value;
+        const statusIcon = document.getElementById('compas-status');
+
+        if (heading !== '' && pitch !== '' && roll !== '') {
+            statusIcon.src = 'check.svg';
+            statusIcon.alt = 'Success';
+            logToFile('afficherCompas', {
+                heading: heading,
+                pitch: pitch,
+                roll: roll,
+                status: 'success'
+            });
+        } else {
+            statusIcon.src = 'error.svg';
+            statusIcon.alt = 'Error';
+            logToFile('afficherCompas', {
+                status: 'error',
+                message: 'Missing required values'
+            });
+        }
+    }
+
+    function afficherSerie() {
+        const baudrate = document.getElementById('baudrate').value;
+        const statusIcon = document.getElementById('serie-status');
+
+        if (baudrate !== '') {
+            document.getElementById('serie-output').innerHTML = 
+                '<h3>Liaison Série</h3>' +
+                '<p>Vitesse de transmission: ' + baudrate + ' baud</p>';
+            statusIcon.src = 'check.svg';
+            statusIcon.alt = 'Success';
+            logToFile('afficherSerie', {
+                baudrate: baudrate,
+                status: 'success'
+            });
+        } else {
+            statusIcon.src = 'error.svg';
+            statusIcon.alt = 'Error';
+            logToFile('afficherSerie', {
+                status: 'error',
+                message: 'Missing baudrate value'
+            });
+        }
+    }
+
+    function afficherNmea() {
+        const nmeaType = document.getElementById('nmea-type').value;
+        const statusIcon = document.getElementById('nmea-status');
+
+        if (nmeaType !== '') {
+            document.getElementById('nmea-output').innerHTML = 
+                '<h3>Type de Trame NMEA 0183</h3>' +
+                '<p>Type de trame: ' + nmeaType + '</p>';
+            statusIcon.src = 'check.svg';
+            statusIcon.alt = 'Success';
+            logToFile('afficherNmea', {
+                nmeaType: nmeaType,
+                status: 'success'
+            });
+        } else {
+            statusIcon.src = 'error.svg';
+            statusIcon.alt = 'Error';
+            logToFile('afficherNmea', {
+                status: 'error',
+                message: 'Missing NMEA type'
+            });
+        }
+    }
+
+    function afficherWifi() {
+        const ssid = document.getElementById('ssid').value;
+        const password = document.getElementById('password').value;
+        const security = document.getElementById('security').value;
+        const statusIcon = document.getElementById('wifi-status');
+
+        if (ssid !== '' && password !== '' && security !== '') {
+            document.getElementById('wifi-output').innerHTML = 
+                '<h3>Paramètres de la Liaison Wifi</h3>' +
+                '<p>SSID: ' + ssid + '</p>' +
+                '<p>Mot de passe: ' + password + '</p>' +
+                '<p>Type de sécurité: ' + security + '</p>';
+            statusIcon.src = 'check.svg';
+            statusIcon.alt = 'Success';
+            logToFile('afficherWifi', {
+                ssid: ssid,
+                security: security,
+                password: '********', // Masking password in logs for security
+                status: 'success'
+            });
+        } else {
+            statusIcon.src = 'error.svg';
+            statusIcon.alt = 'Error';
+            logToFile('afficherWifi', {
+                status: 'error',
+                message: 'Missing required WiFi parameters'
+            });
+        }
+    }
+
+    function traiterTramesCompas(trame) {
+        if (trame.startsWith('$HEHDT')) {
+            const parts = trame.split(',');
+            const heading = parseFloat(parts[1]);
+            document.getElementById('heading').value = heading;
+            document.getElementById('compas-output').innerHTML = 
+                '<h3>Données du Compas</h3>' +
+                '<p>Cap: ' + heading + '°</p>';
+            logToFile('trameHEHDT', {
+                heading: heading
+            });
+        } else if (trame.startsWith('$HEHRT')) {
+            const parts = trame.split(',');
+            const pitch = parseFloat(parts[1]);
+            const roll = parseFloat(parts[2]);
+            document.getElementById('pitch').value = pitch;
+            document.getElementById('roll').value = roll;
+            document.getElementById('compas-output').innerHTML += 
+                '<p>Tangage: ' + pitch + '°</p>' +
+                '<p>Roulis: ' + roll + '°</p>';
+            logToFile('trameHEHRT', {
+                pitch: pitch,
+                roll: roll
+            });
+        }
+    }
+</script>
     <script>
         let port;
         let reader;
