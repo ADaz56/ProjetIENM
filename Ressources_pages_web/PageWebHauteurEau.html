@@ -253,7 +253,88 @@
     <footer>
         <p>&copy; 2024 nke Marine Electronics Ltd</p>
     </footer>
+    <script>
+    // Add these new logging functions at the beginning of your script section
+    function logToFile(action, data) {
+        const timestamp = new Date().toISOString();
+        const logEntry = {
+            timestamp: timestamp,
+            action: action,
+            data: data
+        };
 
+        // Create a Blob containing the log entry
+        const logText = JSON.stringify(logEntry) + '\n';
+        const blob = new Blob([logText], { type: 'text/plain' });
+        
+        // Create a download link for the log file
+        const downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.download = `configuration_log_${timestamp.split('T')[0]}.txt`;
+        
+        // Append to existing log file if possible, otherwise create new
+        fetch(downloadLink.download)
+            .then(response => response.text())
+            .catch(() => '')
+            .then(existingContent => {
+                const newBlob = new Blob([existingContent + logText], { type: 'text/plain' });
+                downloadLink.href = URL.createObjectURL(newBlob);
+                downloadLink.click();
+            });
+    }
+
+    // Modify the save functions to include logging:
+    function saveThreshold() {
+        const threshold = document.getElementById('threshold').value;
+        const statusIcon = document.getElementById('thresholdStatus');
+        
+        if (threshold && parseFloat(threshold) > 0) {
+            localStorage.setItem('waterThreshold', threshold);
+            // Add logging
+            logToFile('saveThreshold', { threshold: threshold });
+            showStatusIcon(statusIcon, true);
+        } else {
+            showStatusIcon(statusIcon, false);
+        }
+    }
+
+    function saveNmeaConfig() {
+        const nmeaType = document.getElementById('nmea-type').value;
+        const statusIcon = document.getElementById('nmeaStatus');
+        
+        if (nmeaType && nmeaType.trim() !== '') {
+            localStorage.setItem('nmeaType', nmeaType);
+            // Add logging
+            logToFile('saveNmeaConfig', { nmeaType: nmeaType });
+            showStatusIcon(statusIcon, true);
+        } else {
+            showStatusIcon(statusIcon, false);
+        }
+    }
+
+    function saveWifiConfig() {
+        const ssid = document.getElementById('ssid').value;
+        const password = document.getElementById('password').value;
+        const security = document.getElementById('security').value;
+        const statusIcon = document.getElementById('wifiStatus');
+        
+        if (ssid && password && security) {
+            const wifiConfig = { ssid, password, security };
+            localStorage.setItem('wifiConfig', JSON.stringify(wifiConfig));
+            // Add logging (excluding password for security)
+            logToFile('saveWifiConfig', { 
+                ssid: ssid, 
+                security: security,
+                password: '********' // Masking password in logs for security
+            });
+            showStatusIcon(statusIcon, true);
+        } else {
+            showStatusIcon(statusIcon, false);
+        }
+    }
+
+    // ... (rest of the original functions remain the same) ...
+</script>
     <script>
         // Mise à jour de l'heure
         function updateDateTime() {
