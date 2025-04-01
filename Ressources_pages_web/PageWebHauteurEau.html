@@ -108,18 +108,11 @@
         }
 
         .container {
-            flex: 1;
-            max-width: 800px;
-            margin: 0 auto;
+            width: 80%;
+            margin: 20px auto;
             padding: 20px;
-        }
-
-        .bg-dark {
             background: var(--color-menu);
-            color: var(--color-text);
             border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
             box-shadow: var(--box-shadow);
         }
 
@@ -182,6 +175,7 @@
         section {
             margin-bottom: 2rem;
             text-align: center;
+            padding: 20px;
         }
 
         footer {
@@ -191,11 +185,11 @@
             padding: 1rem;
             margin-top: auto;
             border-top: 1px solid var(--color-nke-yellow);
+            width: 100%;
         }
     </style>
 </head>
 <body>
-
     <header class="navbar" id="navbar-main">
         <section class="navbar-section">
             <a href="#"><img src="logo.svg" class="navbar-brand" width="150" height="auto" alt="Logo NKE"></a>
@@ -207,136 +201,51 @@
             </div>
         </section>
         <section class="navbar-section">
-            <div class="dropdown">
-            </div>
+            <div class="dropdown"></div>
         </section>
     </header>
 
     <div class="container">
         <h1>Interface de Configuration</h1>
         
-        <div class="bg-dark">
-            <section id="water-threshold">
-                <h2>Seuil de Hauteur d'Eau</h2>
-                <label for="threshold">Seuil acceptable de hauteur d'eau (cm) :</label>
-                <input type="number" id="threshold" name="threshold" min="0" class="form-input">
-                <button class="btn" onclick="saveThreshold()">Enregistrer le Seuil de Hauteur ></button>
-                <img id="thresholdStatus" style="display: none; margin-left: 10px; width: 20px; height: 20px;" src="" alt="status">
-            </section>
-        </div>
+        <section id="water-threshold">
+            <h2>Seuil de Hauteur d'Eau</h2>
+            <label for="threshold">Seuil acceptable de hauteur d'eau (cm) :</label>
+            <input type="number" id="threshold" name="threshold" min="0" class="form-input">
+            <button class="btn" onclick="saveThreshold()">Enregistrer le Seuil de Hauteur</button>
+            <img id="thresholdStatus" style="display: none; margin-left: 10px; width: 20px; height: 20px;" src="" alt="status">
+        </section>
         
-        <div class="bg-dark">
-            <section id="nmea-configuration">
-                <h2>Configuration NMEA 0183</h2>
-                <label for="nmea-type">Type de Trame NMEA 0183 :</label>
-                <input type="text" id="nmea-type" name="nmea-type" class="form-input">
-                <button class="btn" onclick="saveNmeaConfig()">Enregistrer la Configuration NMEA</button>
-                <img id="nmeaStatus" style="display: none; margin-left: 10px; width: 20px; height: 20px;" src="" alt="status">
-            </section>
-        </div>
+        <section id="nmea-configuration">
+            <h2>Configuration NMEA 0183</h2>
+            <label for="nmea-type">Type de Trame NMEA 0183 :</label>
+            <input type="text" id="nmea-type" name="nmea-type" class="form-input">
+            <button class="btn" onclick="saveNmeaConfig()">Enregistrer la Configuration NMEA</button>
+            <img id="nmeaStatus" style="display: none; margin-left: 10px; width: 20px; height: 20px;" src="" alt="status">
+        </section>
         
-        <div class="bg-dark">
-            <section id="wifi-configuration">
-                <h2>Configuration WiFi</h2>
-                <label for="ssid">SSID :</label>
-                <input type="text" id="ssid" name="ssid" class="form-input">
-                <label for="password">Mot de passe :</label>
-                <input type="password" id="password" name="password" class="form-input">
-                <label for="security">Type de Sécurité :</label>
-                <input type="text" id="security" name="security" class="form-input">
-                <button class="btn" onclick="saveWifiConfig()">Enregistrer la Configuration WiFi</button>
-                <img id="wifiStatus" style="display: none; margin-left: 10px; width: 20px; height: 20px;" src="" alt="status">
-            </section>
-        </div>
+        <section id="wifi-configuration">
+            <h2>Configuration WiFi</h2>
+            <label for="ssid">SSID :</label>
+            <input type="text" id="ssid" name="ssid" class="form-input">
+            <label for="password">Mot de passe :</label>
+            <input type="password" id="password" name="password" class="form-input">
+            <label for="security">Type de Sécurité :</label>
+            <select id="security" name="security" class="form-input">
+                <option value="WEP">WEP</option>
+                <option value="WPA">WPA</option>
+                <option value="WPA/WPA2-Personal">WPA/WPA2-Personal</option>
+            </select>
+            <button class="btn" onclick="saveWifiConfig()">Enregistrer la Configuration WiFi</button>
+            <img id="wifiStatus" style="display: none; margin-left: 10px; width: 20px; height: 20px;" src="" alt="status">
+        </section>
     </div>
 
     <footer>
         <p>&copy; 2024 nke Marine Electronics Ltd</p>
     </footer>
+
     <script>
-    // Add these new logging functions at the beginning of your script section
-    function logToFile(action, data) {
-        const timestamp = new Date().toISOString();
-        const logEntry = {
-            timestamp: timestamp,
-            action: action,
-            data: data
-        };
-
-        // Create a Blob containing the log entry
-        const logText = JSON.stringify(logEntry) + '\n';
-        const blob = new Blob([logText], { type: 'text/plain' });
-        
-        // Create a download link for the log file
-        const downloadLink = document.createElement('a');
-        downloadLink.href = URL.createObjectURL(blob);
-        downloadLink.download = `configuration_log_${timestamp.split('T')[0]}.txt`;
-        
-        // Append to existing log file if possible, otherwise create new
-        fetch(downloadLink.download)
-            .then(response => response.text())
-            .catch(() => '')
-            .then(existingContent => {
-                const newBlob = new Blob([existingContent + logText], { type: 'text/plain' });
-                downloadLink.href = URL.createObjectURL(newBlob);
-                downloadLink.click();
-            });
-    }
-
-    // Modify the save functions to include logging:
-    function saveThreshold() {
-        const threshold = document.getElementById('threshold').value;
-        const statusIcon = document.getElementById('thresholdStatus');
-        
-        if (threshold && parseFloat(threshold) > 0) {
-            localStorage.setItem('waterThreshold', threshold);
-            // Add logging
-            logToFile('saveThreshold', { threshold: threshold });
-            showStatusIcon(statusIcon, true);
-        } else {
-            showStatusIcon(statusIcon, false);
-        }
-    }
-
-    function saveNmeaConfig() {
-        const nmeaType = document.getElementById('nmea-type').value;
-        const statusIcon = document.getElementById('nmeaStatus');
-        
-        if (nmeaType && nmeaType.trim() !== '') {
-            localStorage.setItem('nmeaType', nmeaType);
-            // Add logging
-            logToFile('saveNmeaConfig', { nmeaType: nmeaType });
-            showStatusIcon(statusIcon, true);
-        } else {
-            showStatusIcon(statusIcon, false);
-        }
-    }
-
-    function saveWifiConfig() {
-        const ssid = document.getElementById('ssid').value;
-        const password = document.getElementById('password').value;
-        const security = document.getElementById('security').value;
-        const statusIcon = document.getElementById('wifiStatus');
-        
-        if (ssid && password && security) {
-            const wifiConfig = { ssid, password, security };
-            localStorage.setItem('wifiConfig', JSON.stringify(wifiConfig));
-            // Add logging (excluding password for security)
-            logToFile('saveWifiConfig', { 
-                ssid: ssid, 
-                security: security,
-                password: '********' // Masking password in logs for security
-            });
-            showStatusIcon(statusIcon, true);
-        } else {
-            showStatusIcon(statusIcon, false);
-        }
-    }
-
-    // ... (rest of the original functions remain the same) ...
-</script>
-    <script>
-        // Mise à jour de l'heure
         function updateDateTime() {
             const now = new Date();
             const formatted = now.getUTCFullYear() + '-' + 
@@ -347,9 +256,6 @@
                             String(now.getUTCSeconds()).padStart(2, '0');
             document.getElementById('current-time').textContent = formatted + ' UTC';
         }
-
-        // Mise à jour toutes les secondes
-        setInterval(updateDateTime, 1000);
 
         function showStatusIcon(icon, isValid) {
             icon.style.display = 'inline';
@@ -371,6 +277,7 @@
             
             if (threshold && parseFloat(threshold) > 0) {
                 localStorage.setItem('waterThreshold', threshold);
+                logToFile('saveThreshold', { threshold: threshold });
                 showStatusIcon(statusIcon, true);
             } else {
                 showStatusIcon(statusIcon, false);
@@ -383,6 +290,7 @@
             
             if (nmeaType && nmeaType.trim() !== '') {
                 localStorage.setItem('nmeaType', nmeaType);
+                logToFile('saveNmeaConfig', { nmeaType: nmeaType });
                 showStatusIcon(statusIcon, true);
             } else {
                 showStatusIcon(statusIcon, false);
@@ -396,11 +304,42 @@
             const statusIcon = document.getElementById('wifiStatus');
             
             if (ssid && password && security) {
-                localStorage.setItem('wifiConfig', JSON.stringify({ ssid, password, security }));
+                const wifiConfig = { ssid, password, security };
+                localStorage.setItem('wifiConfig', JSON.stringify(wifiConfig));
+                logToFile('saveWifiConfig', { 
+                    ssid: ssid, 
+                    security: security,
+                    password: '********'
+                });
                 showStatusIcon(statusIcon, true);
             } else {
                 showStatusIcon(statusIcon, false);
             }
+        }
+
+        function logToFile(action, data) {
+            const timestamp = new Date().toISOString();
+            const logEntry = {
+                timestamp: timestamp,
+                action: action,
+                data: data
+            };
+
+            const logText = JSON.stringify(logEntry) + '\n';
+            const blob = new Blob([logText], { type: 'text/plain' });
+            
+            const downloadLink = document.createElement('a');
+            downloadLink.href = URL.createObjectURL(blob);
+            downloadLink.download = `configuration_log_${timestamp.split('T')[0]}.txt`;
+            
+            fetch(downloadLink.download)
+                .then(response => response.text())
+                .catch(() => '')
+                .then(existingContent => {
+                    const newBlob = new Blob([existingContent + logText], { type: 'text/plain' });
+                    downloadLink.href = URL.createObjectURL(newBlob);
+                    downloadLink.click();
+                });
         }
 
         function loadThreshold() {
@@ -425,6 +364,9 @@
                 document.getElementById('security').value = wifiConfig.security;
             }
         }
+
+        // Mise à jour de l'heure toutes les secondes
+        setInterval(updateDateTime, 1000);
 
         window.onload = function() {
             loadThreshold();
