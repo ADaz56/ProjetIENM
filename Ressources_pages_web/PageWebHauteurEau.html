@@ -64,21 +64,6 @@
             flex-direction: column;
         }
 
-        .user-info {
-            background-color: var(--color-menu-sub);
-            color: var(--color-text-grey);
-            padding: 8px 20px;
-            text-align: right;
-            font-size: 0.9em;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .datetime {
-            color: var(--color-nke-yellow);
-        }
-
         .navbar {
             background: var(--color-menu);
             padding: 1rem;
@@ -86,25 +71,6 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: solid 1px var(--color-nke-yellow);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .nav-link {
-            color: var(--color-text);
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-        }
-
-        .nav-link:hover {
-            background-color: var(--color-hover);
-            color: var(--color-nke-yellow);
         }
 
         .container {
@@ -195,10 +161,6 @@
             <a href="#"><img src="logo.svg" class="navbar-brand" width="150" height="auto" alt="Logo NKE"></a>
         </section>
         <section class="navbar-center">
-            <div class="nav-links">
-                <a href="index.html" class="nav-link">Configuration Interface</a>
-                <a href="settingnke.html" class="nav-link">Paramètres NKE</a>
-            </div>
         </section>
         <section class="navbar-section">
             <div class="dropdown"></div>
@@ -206,7 +168,7 @@
     </header>
 
     <div class="container">
-        <h1>Interface de Configuration</h1>
+        <h1>Configuration</h1>
         
         <section id="water-threshold">
             <h2>Seuil de Hauteur d'Eau</h2>
@@ -246,17 +208,6 @@
     </footer>
 
     <script>
-        function updateDateTime() {
-            const now = new Date();
-            const formatted = now.getUTCFullYear() + '-' + 
-                            String(now.getUTCMonth() + 1).padStart(2, '0') + '-' +
-                            String(now.getUTCDate()).padStart(2, '0') + ' ' +
-                            String(now.getUTCHours()).padStart(2, '0') + ':' +
-                            String(now.getUTCMinutes()).padStart(2, '0') + ':' +
-                            String(now.getUTCSeconds()).padStart(2, '0');
-            document.getElementById('current-time').textContent = formatted + ' UTC';
-        }
-
         function showStatusIcon(icon, isValid) {
             icon.style.display = 'inline';
             if (isValid) {
@@ -365,14 +316,10 @@
             }
         }
 
-        // Mise à jour de l'heure toutes les secondes
-        setInterval(updateDateTime, 1000);
-
         window.onload = function() {
             loadThreshold();
             loadNmeaConfig();
             loadWifiConfig();
-            updateDateTime();
         }
     </script>
 </body>
