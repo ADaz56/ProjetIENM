@@ -1,139 +1,127 @@
-import unittest
-from unittest.mock import MagicMock, patch
-import os
+fais un programme de test similaire pour verifier que ce programme fonctionne : 
+import time
 from datetime import datetime
+import os
 import serial
-from freezegun import freeze_time
 
-# Import de la classe à tester
-from water_sensor import WaterSensorSystem
+class WaterSensorSystem:
+    def __init__(self):
+        self.CRITICAL_LEVEL_METERS = 0.3
+        self.MAX_LEVEL_METERS = 1.30
+        self.current_user = "CabonM"
+        
+        try:
+            # Connection directe au port USB pour le ch341 (Dev 17)
+            self.sensor = serial.Serial(
+                port='/dev/ttyUSB0',  # Essayez aussi ttyUSB1 si ça ne fonctionne pas
+                baudrate=9600,
+                bytesize=serial.EIGHTBITS,
+                parity=serial.PARITY_NONE,
+                stopbits=serial.STOPBITS_ONE,
+                timeout=1
+            )
+            print(f"Connexion établie sur {self.sensor.port}")
+        except Exception as e:
+            print(f"Erreur de connexion: {str(e)}")
+            raise
 
-class TestWaterSensorSystem(unittest.TestCase):
-    def setUp(self):
-        """Configuration initiale pour chaque test"""
-        # Mock du port série
-        self.serial_mock = MagicMock(spec=serial.Serial)
-        self.serial_patcher = patch('serial.Serial', return_value=self.serial_mock)
-        self.serial_mock_class = self.serial_patcher.start()
-        
-        # Mock pour os.path.exists et os.makedirs
-        self.path_exists_patcher = patch('os.path.exists', return_value=False)
-        self.makedirs_patcher = patch('os.makedirs')
-        self.path_exists_mock = self.path_exists_patcher.start()
-        self.makedirs_mock = self.makedirs_patcher.start()
-        
-        # Création de l'instance avec le port série mocké
-        self.system = WaterSensorSystem()
-        
-        # Configuration du mock série
-        self.serial_mock.port = '/dev/ttyUSB0'
-        self.serial_mock.is_open = True
-        
-    def tearDown(self):
-        """Nettoyage après chaque test"""
-        self.serial_patcher.stop()
-        self.path_exists_patcher.stop()
-        self.makedirs_patcher.stop()
+        self.log_dir = "/home/pi/water_sensor_logs"
+        if not os.path.exists(self.log_dir):
+            os.makedirs(self.log_dir)
 
-    def test_init(self):
-        """Test de l'initialisation du système"""
-        self.assertEqual(self.system.CRITICAL_LEVEL_METERS, 0.3)
-        self.assertEqual(self.system.MAX_LEVEL_METERS, 1.30)
-        self.assertEqual(self.system.current_user, "CabonM")
-        self.assertEqual(self.system.log_dir, "/home/pi/water_sensor_logs")
-        
-        # Vérifie que le dossier de logs est créé si inexistant
-        self.makedirs_mock.assert_called_once_with("/home/pi/water_sensor_logs")
+    def read_sensor_data(self):
+        """Lit les données brutes du capteur."""
+        try:
+            if self.sensor.in_waiting:  # Vérifie s'il y a des données à lire
+                raw_data = self.sensor.readline().decode('utf-8').strip()
+                print(f"Données brutes reçues: {raw_data}")  # Debug
+                return raw_data
+        except Exception as e:
+            print(f"Erreur de lecture: {str(e)}")
+        return None
 
-    @freeze_time("2025-05-12 08:01:17")
-    def test_log_data(self):
-        """Test de la fonction de journalisation"""
-        test_data = "0.75"
-        mock_open = unittest.mock.mock_open()
-        
-        with patch('builtins.open', mock_open):
-            self.system.log_data(test_data)
-            
-        # Vérifie que le fichier est ouvert avec le bon nom
-        expected_filename = os.path.join(
-            "/home/pi/water_sensor_logs",
-            f"sensor_log_{datetime.now().strftime('%Y%m%d')}.txt"
-        )
-        mock_open.assert_called_once_with(expected_filename, 'a', encoding='utf-8')
-        
-        # Vérifie le contenu écrit
-        expected_log = "[2025-05-12 08:01:17] CabonM: 0.75\n"
-        mock_open().write.assert_called_once_with(expected_log)
+    def run(self):
+        print("\nDémarrage de la lecture du capteur...")
+        print(f"Port: {self.sensor.port}")
+        print("Appuyez sur Ctrl+C pour arrêter\n")
 
-    def test_read_sensor_data_with_data(self):
-        """Test de la lecture du capteur avec données disponibles"""
-        # Configure le mock pour simuler des données disponibles
-        self.serial_mock.in_waiting = True
-        self.serial_mock.readline.return_value = b"0.75\n"
-        
-        data = self.system.read_sensor_data()
-        self.assertEqual(data, "0.75")
-        self.serial_mock.readline.assert_called_once()
+        try:
+            while True:
+                # Affichage de l'en-tête
+                print("\n" + "=" * 60)
+                current_time = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
+                print(f"Current Date and Time (UTC - YYYY-MM-DD HH:MM:SS formatted): {current_time}")
+                print(f"Current User's Login: {self.current_user}")
+                
+                # Lecture du capteur
+                data = self.read_sensor_data()
+                if data:
+                    print(f"Mesure: {data}")
+                    self.log_data(data)
+                else:
+                    print("Attente de données...")
+                
+                print("=" * 60)
+                time.sleep(1)
 
-    def test_read_sensor_data_no_data(self):
-        """Test de la lecture du capteur sans données disponibles"""
-        # Configure le mock pour simuler l'absence de données
-        self.serial_mock.in_waiting = False
-        
-        data = self.system.read_sensor_data()
-        self.assertIsNone(data)
-        self.serial_mock.readline.assert_not_called()
+        except KeyboardInterrupt:
+            print("\nArrêt du programme")
+        finally:
+            self.cleanup()
 
-    def test_read_sensor_data_error(self):
-        """Test de la lecture du capteur avec erreur"""
-        # Configure le mock pour lever une exception
-        self.serial_mock.in_waiting = True
-        self.serial_mock.readline.side_effect = Exception("Erreur de lecture")
+    def log_data(self, data):
+        """Enregistre les données dans un fichier log."""
+        timestamp = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
+        log_file = os.path.join(self.log_dir, f"sensor_log_{datetime.now().strftime('%Y%m%d')}.txt")
         
-        data = self.system.read_sensor_data()
-        self.assertIsNone(data)
+        with open(log_file, 'a', encoding='utf-8') as f:
+            f.write(f"[{timestamp}] {self.current_user}: {data}\n")
 
-    def test_cleanup(self):
-        """Test de la fonction de nettoyage"""
-        self.system.cleanup()
-        self.serial_mock.close.assert_called_once()
+    def cleanup(self):
+        """Ferme proprement le port série."""
+        try:
+            if hasattr(self, 'sensor') and self.sensor.is_open:
+                self.sensor.close()
+            print("\nPort série fermé")
+        except Exception as e:
+            print(f"Erreur lors de la fermeture: {str(e)}")
 
-    @patch('time.sleep', return_value=None)
-    def test_run(self, mock_sleep):
-        """Test de la boucle principale avec interruption"""
-        # Configure le mock pour simuler une exécution puis une interruption
-        self.serial_mock.in_waiting = True
-        self.serial_mock.readline.return_value = b"0.75\n"
+if __name__ == "__main__":
+    # Essaie d'abord avec ttyUSB0
+    try:
+        system = WaterSensorSystem()
+        system.run()
+    except Exception as e:
+        print(f"Erreur sur ttyUSB0: {str(e)}")
+        print("Tentative avec ttyUSB1...")
         
-        # Simule une KeyboardInterrupt après la première itération
-        mock_sleep.side_effect = KeyboardInterrupt()
-        
-        # Capture la sortie standard pour vérification
-        with patch('builtins.print') as mock_print:
-            self.system.run()
-            
-        # Vérifie que les messages attendus ont été affichés
-        expected_calls = [
-            unittest.mock.call('\nDémarrage de la lecture du capteur...'),
-            unittest.mock.call(f"Port: {self.serial_mock.port}"),
-            unittest.mock.call('Appuyez sur Ctrl+C pour arrêter\n'),
-            unittest.mock.call('\n' + '=' * 60),
-            unittest.mock.call(f"Current Date and Time (UTC - YYYY-MM-DD HH:MM:SS formatted): {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')}"),
-            unittest.mock.call(f"Current User's Login: {self.system.current_user}")
-        ]
-        mock_print.assert_has_calls(expected_calls, any_order=True)
+        # Si ttyUSB0 échoue, essaie avec ttyUSB1
+        try:
+            class WaterSensorSystemUSB1(WaterSensorSystem):
+                def __init__(self):
+                    self.CRITICAL_LEVEL_METERS = 0.3
+                    self.MAX_LEVEL_METERS = 1.30
+                    self.current_user = "CabonM"
+                    
+                    self.sensor = serial.Serial(
+                        port='/dev/ttyUSB1',
+                        baudrate=9600,
+                        bytesize=serial.EIGHTBITS,
+                        parity=serial.PARITY_NONE,
+                        stopbits=serial.STOPBITS_ONE,
+                        timeout=1
+                    )
+                    print(f"Connexion établie sur {self.sensor.port}")
+                    
+                    self.log_dir = "/home/pi/water_sensor_logs"
+                    if not os.path.exists(self.log_dir):
+                        os.makedirs(self.log_dir)
 
-    def test_alternative_usb_port(self):
-        """Test de la création du système avec le port USB alternatif"""
-        # Force une exception sur le premier port
-        self.serial_mock_class.side_effect = [serial.SerialException, MagicMock()]
-        
-        with self.assertRaises(serial.SerialException):
-            system1 = WaterSensorSystem()
-            
-        # Vérifie que le second port est utilisé
-        system2 = WaterSensorSystemUSB1()
-        self.assertEqual(system2.sensor.port, '/dev/ttyUSB1')
-
-if __name__ == '__main__':
-    unittest.main()
+            system = WaterSensorSystemUSB1()
+            system.run()
+        except Exception as e:
+            print(f"Erreur sur ttyUSB1: {str(e)}")
+            print("\nVérifiez que:")
+            print("1. Le capteur est bien branché")
+            print("2. Les permissions sont correctes (sudo chmod 666 /dev/ttyUSB*)")
+            print("3. L'utilisateur est dans le groupe dialout (sudo usermod -a -G dialout $USER)")
