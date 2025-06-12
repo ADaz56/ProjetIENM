@@ -1,38 +1,64 @@
+import serial
 import time
-from datetime import datetime
-import winsound  # Pour simuler le buzzer sous Windows
-import os
+import RPi.GPIO as GPIO
 
-class WaterSensorSystem:
-    def __init__(self):
-        self.CRITICAL_LEVEL = 300
-        self.current_user = "CabonM"  # Utilisateur actuel
-        self.water_level = 0
-        self.alarm_active = False
-        
-        # Paramètres du buzzer
-        self.FREQUENCY = 2000  # Fréquence en Hz
-        self.DURATION = 500    # Durée en ms
-        
-        # Créer un dossier pour les logs s'il n'existe pas
-        self.log_dir = "water_sensor_logs"
-        if not os.path.exists(self.log_dir):
-            os.makedirs(self.log_dir)
+# --- Configuration ---
+CRITICAL_DEPTH = 0.8  # Seuil critique en mètres
+BUZZER_PIN = 17       # GPIO du buzzer
 
-    def clear_screen(self):
-        """Nettoie l'écran du terminal."""
-        os.system('cls' if os.name == 'nt' else 'clear')
+# Initialisation GPIO
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(BUZZER_PIN, GPIO.OUT)
+GPIO.output(BUZZER_PIN, GPIO.LOW)
 
-    def sound_alarm(self):
-        """Émet un son d'alarme."""
-        try:
-            winsound.Beep(self.FREQUENCY, self.DURATION)
-        except:
-            print('\a')  # Alternative pour les systèmes non-Windows
+# Lecture de la sonde DST800
+def read_depth():
+    try:
+        with serial.Serial('/dev/ttyUSB1', baudrate=4800, timeout=1) as ser:
+            line = ser.readline().decode('ascii', errors='replace')
+            if line.startswith('$SDDBT'):
+                parts = line.split(',')
+                depth = float(parts[1])
+                return depth
+    except Exception as e:
+        print(f"[ERREUR] Lecture de la sonde : {e}")
+    return None
 
-    def log_event(self, message):
-        """Enregistre un événement dans le fichier de log."""
-        timestamp = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
-        log_file = os.path.join(self.log_dir, f"water_sensor_log_{datetime.now().strftime('%Y%m%d')}.txt")
-        
-        with open(log_file,
+def trigger_alert():
+    GPIO.output(BUZZER_PIN, GPIO.HIGH)
+
+def stop_alert():
+    GPIO.output(BUZZER_PIN, GPIO.LOW)
+
+def main():
+    alert_active = False
+
+    try:
+        while True:
+            depth = read_depth()
+            if depth is not None:
+                print(f"[INFO] Profondeur détectée : {depth:.2f} m")
+
+                if depth < CRITICAL_DEPTH and not alert_active:
+                    print("[ALERTE] Niveau critique atteint ! Déclenchement du buzzer.")
+                    trigger_alert()
+                    alert_active = True
+
+                elif depth >= CRITICAL_DEPTH and alert_active:
+                    print("[INFO] Retour à la normale. Arrêt de l'alerte.")
+                    stop_alert()
+                    alert_active = False
+
+            else:
+                print("[ATTENTION] Donnée non reçue ou invalide.")
+
+            time.sleep(1)
+
+    except KeyboardInterrupt:
+        print("\nArrêt du programme par l'utilisateur.")
+    finally:
+        stop_alert()
+        GPIO.cleanup()
+
+if __name__ == "__main__":
+    main()
