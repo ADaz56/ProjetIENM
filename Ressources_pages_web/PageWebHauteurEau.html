@@ -269,26 +269,36 @@
         }
 
         function logToFile(action, data) {
-            const timestamp = new Date().toISOString();
-            const logEntry = {
-                timestamp: timestamp,
-                action: action,
-                data: data
-            };
-
+            // Obtenir la date et l'heure actuelles en UTC
+            const now = new Date();
+            // Ajouter un décalage de +2 heures (UTC+2) en millisecondes
+            const offsetMs = 2 * 60 * 60 * 1000;
+            const localTime = new Date(now.getTime() + offsetMs);
+            // Convertir la date en format ISO et remplacer 'Z' par '+02:00' pour refléter le fuseau horaire
+            const isoWithOffset = localTime.toISOString().replace('Z', '+02:00');
+            const timestamp = isoWithOffset;
+            // Créer une entrée de journal contenant le timestamp, l'action et les données
+            const logEntry = {timestamp: timestamp,action: action,data: data};
+            // Convertir l'entrée en texte JSON et ajouter une ligne de fin
             const logText = JSON.stringify(logEntry) + '\n';
+            // Créer un objet Blob à partir du texte du journal (type : texte brut)
             const blob = new Blob([logText], { type: 'text/plain' });
-            
+            // Créer dynamiquement un élément <a> pour déclencher le téléchargement du fichier
             const downloadLink = document.createElement('a');
+            // Générer une URL temporaire pour le Blob
             downloadLink.href = URL.createObjectURL(blob);
+            // Définir le nom du fichier en fonction de la date (ex : configuration_log_2025-06-12.txt)
             downloadLink.download = `configuration_log_${timestamp.split('T')[0]}.txt`;
-            
+            // Tenter de lire un fichier existant portant le même nom (optionnel, ne fonctionne pas localement)
             fetch(downloadLink.download)
-                .then(response => response.text())
-                .catch(() => '')
+                .then(response => response.text())           // Lire le contenu existant du fichier (si possible)
+                .catch(() => '')                              // En cas d’échec, retourner une chaîne vide
                 .then(existingContent => {
+                    // Fusionner l'ancien contenu avec le nouveau log
                     const newBlob = new Blob([existingContent + logText], { type: 'text/plain' });
+                    // Mettre à jour l'URL de téléchargement avec le contenu combiné
                     downloadLink.href = URL.createObjectURL(newBlob);
+                    // Simuler un clic pour déclencher le téléchargement du fichier
                     downloadLink.click();
                 });
         }
